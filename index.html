@@ -1,0 +1,1866 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Rotina Su">
+<meta name="theme-color" content="#F72585">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="manifest" href="/manifest.json">
+<link rel="apple-touch-icon" href="/icon-180.png">
+<link rel="icon" href="/icon-192.png">
+<title>Rotina da Su 💗</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --pink:#F72585;--pink2:#ff6b9d;--pink3:#ffb3cc;--pink4:#fff0f5;--pink5:#ffe4ef;
+  --purple:#c471ed;--green:#2dc653;--blue:#4A90D9;
+  --bg:#f8f8f8;--card:#fff;--text:#1a1a2e;--sub:#888;--border:#f0e0e8;
+  --grad:linear-gradient(135deg,#F72585,#c471ed);
+  --r:18px;--fs:15px;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;font-family:'Nunito',sans-serif;font-size:var(--fs);background:var(--bg);color:var(--text);overscroll-behavior:none;-webkit-font-smoothing:antialiased}
+body{max-width:430px;margin:0 auto;min-height:100vh;position:relative}
+
+/* ---- TOP BAR ---- */
+.topbar{background:#fff;padding:14px 18px 10px;position:sticky;top:0;z-index:60;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.topbar-title{font-size:17px;font-weight:800;color:var(--text)}
+.topbar-sub{font-size:11px;color:var(--pink);font-weight:700;text-align:center}
+.topbar-icon{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;cursor:pointer;border:none;background:var(--pink5)}
+
+/* ---- SAVED TOAST ---- */
+.toast{position:fixed;top:70px;left:50%;transform:translateX(-50%);background:#1a1a2e;color:#fff;padding:8px 18px;border-radius:30px;font-size:13px;font-weight:700;z-index:200;opacity:0;pointer-events:none;transition:.3s;white-space:nowrap}
+.toast.show{opacity:1}
+.offline-bar{background:#ff9500;color:#fff;text-align:center;font-size:12px;padding:5px;display:none;font-weight:700}
+.offline-bar.show{display:block}
+
+/* ---- CONTENT ---- */
+.content{padding:16px 16px 90px;overflow-y:auto}
+
+/* ---- BOTTOM NAV ---- */
+.bnav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;background:#fff;border-top:1px solid var(--border);display:flex;z-index:60;padding:4px 0 6px}
+.bnav-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;border:none;background:none;cursor:pointer;padding:6px 2px;font-family:'Nunito',sans-serif}
+.bnav-btn .bi{font-size:21px;transition:.2s}
+.bnav-btn .bl{font-size:9px;color:var(--sub);font-weight:700;letter-spacing:.2px}
+.bnav-btn.act .bi{transform:scale(1.1)}
+.bnav-btn.act .bl{color:var(--pink);font-weight:900}
+
+/* ---- FAB ---- */
+.fab{position:fixed;bottom:78px;right:calc(50% - 200px);width:50px;height:50px;border-radius:50%;background:var(--grad);color:#fff;font-size:24px;border:none;cursor:pointer;box-shadow:0 4px 18px rgba(247,37,133,.45);display:flex;align-items:center;justify-content:center;z-index:55;transition:.15s}
+.fab:active{transform:scale(.9)}
+
+/* ---- CARDS ---- */
+.card{background:var(--card);border-radius:var(--r);padding:18px;margin-bottom:14px;box-shadow:0 2px 12px rgba(247,37,133,.07)}
+.card-title{font-size:16px;font-weight:800;color:var(--text);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.card-sub{font-size:12px;color:var(--sub);margin-top:-10px;margin-bottom:14px}
+.section-label{font-size:11px;font-weight:800;color:var(--pink);text-transform:uppercase;letter-spacing:.8px;margin:6px 0 10px}
+
+/* ---- PINK HEADER CARD ---- */
+.hero-card{background:var(--grad);border-radius:20px;padding:20px;margin-bottom:14px;color:#fff;box-shadow:0 5px 20px rgba(247,37,133,.35)}
+.hero-card h2{font-size:20px;font-weight:900;line-height:1.3}
+.hero-card p{font-size:13px;opacity:.85;margin-top:6px}
+
+/* ---- CHECK ROWS ---- */
+.ck-row{display:flex;align-items:center;gap:12px;padding:12px 0;cursor:pointer;border-bottom:1px solid var(--pink5);transition:.15s}
+.ck-row:last-child{border-bottom:none}
+.ck-row:active{background:var(--pink5);margin:0 -18px;padding-left:18px;padding-right:18px}
+.ck-circle{width:24px;height:24px;border-radius:50%;border:2px solid var(--pink3);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:.2s;background:#fff}
+.ck-circle.done{background:var(--pink);border-color:var(--pink)}
+.ck-circle.done::after{content:'✓';color:#fff;font-size:12px;font-weight:900}
+.ck-label{font-size:14px;font-weight:600;flex:1;color:var(--text)}
+.ck-label.done{text-decoration:line-through;color:#bbb}
+.ck-emoji{font-size:20px;width:36px;height:36px;border-radius:50%;background:var(--pink5);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.badge-gold{background:#fff3cd;color:#b8860b;font-size:10px;font-weight:800;padding:3px 8px;border-radius:20px;white-space:nowrap}
+
+/* ---- COUNTER ---- */
+.counter-row{display:flex;align-items:center;gap:14px}
+.cbtn{width:36px;height:36px;border-radius:50%;border:2px solid var(--pink3);background:#fff;color:var(--pink);font-size:20px;font-weight:900;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.15s}
+.cbtn:active{background:var(--pink5)}
+.cbtn.plus{background:var(--pink);border-color:var(--pink);color:#fff;box-shadow:0 3px 10px rgba(247,37,133,.4)}
+.cval{font-size:28px;font-weight:900;color:var(--pink);min-width:40px;text-align:center}
+
+/* ---- PROGRESS ---- */
+.pbar-wrap{background:var(--pink5);border-radius:20px;height:8px;overflow:hidden}
+.pbar-fill{height:100%;border-radius:20px;background:var(--grad);transition:width .4s}
+
+/* ---- TABS ---- */
+.tabs{display:flex;gap:7px;margin-bottom:16px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{padding:7px 14px;border-radius:30px;border:none;cursor:pointer;font-family:'Nunito',sans-serif;font-weight:700;font-size:12px;white-space:nowrap;transition:.2s}
+.tab.on{background:var(--grad);color:#fff;box-shadow:0 3px 10px rgba(247,37,133,.3)}
+.tab:not(.on){background:var(--pink5);color:var(--pink)}
+
+/* ---- INPUT ---- */
+.inp{width:100%;padding:12px 14px;border-radius:14px;border:1.5px solid var(--border);font-family:'Nunito',sans-serif;font-size:14px;color:var(--text);background:#fff;outline:none}
+.inp:focus{border-color:var(--pink)}
+.sel{width:100%;padding:12px 14px;border-radius:14px;border:1.5px solid var(--border);font-family:'Nunito',sans-serif;font-size:14px;background:#fff;color:var(--text);cursor:pointer;outline:none}
+
+/* ---- BUTTONS ---- */
+.btn-p{background:var(--grad);color:#fff;border:none;border-radius:30px;padding:13px 22px;font-family:'Nunito',sans-serif;font-weight:800;cursor:pointer;font-size:14px;box-shadow:0 4px 14px rgba(247,37,133,.35);transition:.15s}
+.btn-p:active{transform:scale(.97)}
+.btn-s{background:var(--pink5);color:var(--pink);border:none;border-radius:30px;padding:10px 18px;font-family:'Nunito',sans-serif;font-weight:700;cursor:pointer;font-size:13px}
+.btn-ghost{background:none;border:none;cursor:pointer;font-size:16px;padding:4px;opacity:.65}
+.btn-tag{border:none;border-radius:20px;padding:5px 12px;font-size:12px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif}
+
+/* ---- MODAL ---- */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:150;display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:.25s}
+.overlay.open{opacity:1;pointer-events:all}
+.mbox{background:#fff;border-radius:24px 24px 0 0;padding:24px;width:100%;max-width:430px;max-height:88vh;overflow-y:auto;transform:translateY(100%);transition:.3s}
+.overlay.open .mbox{transform:translateY(0)}
+.mtitle{font-size:18px;font-weight:900;color:var(--text);margin-bottom:18px}
+.mrow{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
+
+/* ---- SPIRITUAL ACTIVITY ITEM ---- */
+.act-item{background:#fff;border-radius:16px;padding:14px;margin-bottom:10px;display:flex;align-items:center;gap:12px;box-shadow:0 2px 10px rgba(247,37,133,.08)}
+.act-icon{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;position:relative}
+.act-icon::before{content:'';position:absolute;inset:-3px;border-radius:50%;background:conic-gradient(var(--pink) var(--prog,50%), var(--pink5) 0);z-index:-1}
+.act-inner{background:#fff;width:100%;height:100%;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px}
+.act-info{flex:1}
+.act-info h4{font-size:14px;font-weight:800;color:var(--text)}
+.act-info p{font-size:12px;color:var(--sub);margin-top:1px}
+.act-btn{border:none;border-radius:20px;padding:6px 12px;font-size:12px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif;white-space:nowrap}
+.act-btn.done-btn{background:var(--pink5);color:var(--pink)}
+.act-btn.concl-btn{background:#e8f5e9;color:#2dc653}
+
+/* ---- FROZEN ITEM ---- */
+.frozen-item{display:flex;align-items:center;gap:12px;padding:13px 0;border-bottom:1px solid var(--pink5)}
+.frozen-item:last-child{border-bottom:none}
+.fi-emoji{font-size:28px;width:44px;height:44px;background:var(--pink5);border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.fi-info{flex:1}
+.fi-info h4{font-size:14px;font-weight:800}
+.fi-info p{font-size:11px;color:var(--sub)}
+
+/* ---- BIBLE SELECT ---- */
+.bible-sel{background:var(--pink5);border:none;border-radius:14px;padding:12px 16px;font-family:'Nunito',sans-serif;font-size:16px;font-weight:700;color:var(--text);width:100%;cursor:pointer;outline:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='%23F72585'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center}
+.num-box{background:var(--pink5);border-radius:12px;padding:14px;text-align:center;font-size:24px;font-weight:900;color:var(--text);cursor:pointer}
+
+/* ---- STREAK ---- */
+.streak{background:linear-gradient(135deg,#ff9a00,#F72585);color:#fff;border-radius:30px;padding:5px 14px;font-size:13px;font-weight:900;display:inline-flex;align-items:center;gap:5px}
+
+/* ---- CONQUEST CARD ---- */
+.medal{border-radius:18px;padding:18px;text-align:center;border:2px solid var(--border)}
+.medal.won{border-color:var(--pink);background:var(--pink5)}
+
+/* ---- PRAYER ---- */
+.prayer{background:var(--pink5);border-radius:14px;padding:14px;margin-bottom:10px;border-left:4px solid var(--pink)}
+
+/* ---- LAUNDRY ---- */
+.lbox{background:var(--pink5);border-radius:16px;padding:16px;margin-bottom:14px}
+
+/* ---- QUOTE ---- */
+.quote-box{background:var(--pink5);border-radius:18px;padding:20px;text-align:center;margin-bottom:14px}
+.quote-box q{font-size:16px;font-weight:700;color:var(--pink);font-style:italic;line-height:1.5}
+.quote-box cite{display:block;margin-top:8px;font-size:12px;font-weight:800;color:var(--pink);text-transform:uppercase;letter-spacing:1px}
+
+/* ---- EMOJI GRID ---- */
+.eg{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:14px}
+.ebtn{width:38px;height:38px;border-radius:10px;border:2px solid var(--border);background:#fff;font-size:19px;cursor:pointer;transition:.15s}
+.ebtn.sel{border-color:var(--pink);background:var(--pink5)}
+
+/* ---- MISC ---- */
+.divider{height:1px;background:var(--pink5);margin:12px 0}
+.tag{display:inline-flex;gap:4px;align-items:center;background:var(--pink5);color:var(--pink);border-radius:20px;padding:4px 10px;font-size:12px;font-weight:700}
+.toggle{width:48px;height:26px;border-radius:13px;background:#ddd;position:relative;cursor:pointer;border:none;transition:.2s;flex-shrink:0}
+.toggle.on{background:var(--pink)}
+.toggle::after{content:'';position:absolute;width:20px;height:20px;border-radius:50%;background:#fff;top:3px;left:3px;transition:.2s;box-shadow:0 1px 4px rgba(0,0,0,.2)}
+.toggle.on::after{left:25px}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.fu{animation:fadeUp .3s ease both}
+@keyframes pop{0%{transform:scale(1)}50%{transform:scale(1.08)}100%{transform:scale(1)}}
+.pop{animation:pop .25s ease}
+</style>
+</head>
+<body>
+
+<div class="offline-bar" id="offlineBar">📵 Offline — o app funciona normalmente!</div>
+<div class="toast" id="toast">✅ Salvo!</div>
+
+<div class="topbar" id="topbar">
+  <button class="topbar-icon" onclick="openModal('settingsModal')">⚙️</button>
+  <div style="text-align:center">
+    <div class="topbar-title" id="topTitle">🏠 Início</div>
+    <div class="topbar-sub" id="topSub">Rotina da Su 💗</div>
+  </div>
+  <button class="topbar-icon" onclick="openModal('addModal')">✨</button>
+</div>
+
+<div class="content" id="content"></div>
+<nav class="bnav" id="bnav"></nav>
+<button class="fab" id="fab" onclick="handleFab()">＋</button>
+
+<!-- ===== MODALS ===== -->
+
+<!-- Settings -->
+<div class="overlay" id="settingsModal">
+<div class="mbox">
+  <div class="mrow"><div class="mtitle">⚙️ Configurações</div><button class="btn-ghost" onclick="closeModal('settingsModal')" style="font-size:22px">✕</button></div>
+  <div class="section-label">🎨 Aparência</div>
+  <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px" id="palGrid"></div>
+  <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--pink5)">
+    <span style="font-weight:700">🌙 Modo Escuro</span>
+    <button class="toggle" id="darkToggle" onclick="toggleDark()"></button>
+  </div>
+  <div style="padding:14px 0;border-bottom:1px solid var(--pink5)">
+    <div style="font-weight:700;margin-bottom:10px">Tt Tamanho da Fonte</div>
+    <div style="display:flex;gap:8px">
+      <button class="btn-s" onclick="setFS('small')">Pequeno</button>
+      <button class="btn-s" onclick="setFS('normal')" style="background:var(--pink);color:#fff">Normal</button>
+      <button class="btn-s" onclick="setFS('large')">Grande</button>
+    </div>
+  </div>
+  <div style="padding:14px 0;border-bottom:1px solid var(--pink5)">
+    <div class="section-label" style="margin-bottom:10px">💾 Dados e Segurança</div>
+    <button class="btn-p" style="width:100%;margin-bottom:8px" onclick="exportData()">📤 Exportar Dados</button>
+    <label class="btn-s" style="display:block;text-align:center;cursor:pointer">📥 Importar Dados<input type="file" accept=".json" style="display:none" onchange="importData(event)"></label>
+  </div>
+  <div style="padding:14px 0">
+    <div class="section-label">📲 Instalar no Celular</div>
+    <div style="background:var(--pink5);border-radius:14px;padding:14px;font-size:13px;color:var(--sub);line-height:1.8">
+      1. Abra no <b>Chrome</b> (Android) ou <b>Safari</b> (iPhone)<br>
+      2. Toque em <b>Compartilhar ↗️</b><br>
+      3. Selecione <b>"Adicionar à Tela de Início"</b><br>
+      4. O ícone 💗 aparecerá na sua tela!
+    </div>
+  </div>
+  <button class="btn-p" style="width:100%;margin-top:10px" onclick="closeModal('settingsModal')">✅ Fechar</button>
+</div>
+</div>
+
+<!-- Add Mission -->
+<div class="overlay" id="addModal">
+<div class="mbox">
+  <div class="mrow"><div class="mtitle">🌸 Nova Missão</div><button class="btn-ghost" onclick="closeModal('addModal')" style="font-size:22px">✕</button></div>
+  <div class="eg" id="mEG"></div>
+  <input class="inp" id="mTxt" placeholder="Nome da missão..." style="margin-bottom:10px">
+  <select class="sel" id="mPer" style="margin-bottom:18px">
+    <option>Manhã</option><option>Tarde</option><option>Noite</option><option>Semana</option>
+  </select>
+  <div style="display:flex;gap:10px">
+    <button class="btn-s" style="flex:1" onclick="closeModal('addModal')">Cancelar</button>
+    <button class="btn-p" style="flex:1" onclick="saveMission()">Salvar 🌸</button>
+  </div>
+</div>
+</div>
+
+<!-- Prayer -->
+<div class="overlay" id="prayerModal">
+<div class="mbox">
+  <div class="mrow"><div class="mtitle">🙏 Novo Pedido</div><button class="btn-ghost" onclick="closeModal('prayerModal')" style="font-size:22px">✕</button></div>
+  <textarea class="inp" id="pTxt" placeholder="Escreva seu pedido de oração..." rows="4" style="resize:none;margin-bottom:14px"></textarea>
+  <div style="display:flex;gap:10px">
+    <button class="btn-s" style="flex:1" onclick="closeModal('prayerModal')">Cancelar</button>
+    <button class="btn-p" style="flex:1" onclick="savePrayer()">Salvar 🙏</button>
+  </div>
+</div>
+</div>
+
+<!-- Reading -->
+<div class="overlay" id="readModal">
+<div class="mbox">
+  <div class="mrow"><div class="mtitle">📖 Registrar Leitura</div><button class="btn-ghost" onclick="closeModal('readModal')" style="font-size:22px">✕</button></div>
+  <div style="margin-bottom:10px">
+    <div class="section-label">Livro da Bíblia</div>
+    <select class="bible-sel" id="rBook"></select>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+    <div><div class="section-label">Capítulo</div><input class="inp" id="rChap" type="number" min="1" placeholder="1"></div>
+    <div><div class="section-label">Versículo</div><input class="inp" id="rVerse" type="number" min="1" placeholder="1"></div>
+  </div>
+  <textarea class="inp" id="rNote" placeholder="Reflexão (opcional)..." rows="3" style="resize:none;margin-bottom:14px"></textarea>
+  <button class="btn-p" style="width:100%" onclick="saveReading()">📖 Atualizar Leitura</button>
+</div>
+</div>
+
+<!-- Meeting -->
+<div class="overlay" id="meetModal">
+<div class="mbox">
+  <div class="mrow"><div class="mtitle">📅 Nova Reunião</div><button class="btn-ghost" onclick="closeModal('meetModal')" style="font-size:22px">✕</button></div>
+  <input class="inp" id="meTitle" placeholder="Título" style="margin-bottom:10px">
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+    <input class="inp" id="meDate" type="date">
+    <input class="inp" id="meTime" type="time">
+  </div>
+  <textarea class="inp" id="mePrep" placeholder="Preparação necessária..." rows="3" style="resize:none;margin-bottom:14px"></textarea>
+  <div style="display:flex;gap:10px">
+    <button class="btn-s" style="flex:1" onclick="closeModal('meetModal')">Cancelar</button>
+    <button class="btn-p" style="flex:1" onclick="saveMeeting()">Salvar 📅</button>
+  </div>
+</div>
+</div>
+
+<!-- Goal -->
+<div class="overlay" id="goalModal">
+<div class="mbox">
+  <div class="mrow"><div class="mtitle">🌟 Nova Meta</div><button class="btn-ghost" onclick="closeModal('goalModal')" style="font-size:22px">✕</button></div>
+  <input class="inp" id="gTxt" placeholder="Meta espiritual..." style="margin-bottom:10px">
+  <input class="inp" id="gTarget" type="number" placeholder="Meta total (ex: 30)" style="margin-bottom:14px">
+  <div style="display:flex;gap:10px">
+    <button class="btn-s" style="flex:1" onclick="closeModal('goalModal')">Cancelar</button>
+    <button class="btn-p" style="flex:1" onclick="saveGoal()">Salvar 🌟</button>
+  </div>
+</div>
+</div>
+
+<!-- Timer Add -->
+<div class="overlay" id="timerModal">
+<div class="mbox">
+  <div class="mrow"><div class="mtitle">⏱️ Novo Timer</div><button class="btn-ghost" onclick="closeModal('timerModal')" style="font-size:22px">✕</button></div>
+  <input class="inp" id="tmName" placeholder="Nome (ex: Pão de queijo)" style="margin-bottom:10px">
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">
+    <div><div class="section-label">Minutos</div><input class="inp" id="tmMins" type="number" min="0" placeholder="0"></div>
+    <div><div class="section-label">Segundos</div><input class="inp" id="tmSecs" type="number" min="0" max="59" placeholder="0"></div>
+  </div>
+  <div style="display:flex;gap:10px">
+    <button class="btn-s" style="flex:1" onclick="closeModal('timerModal')">Cancelar</button>
+    <button class="btn-p" style="flex:1" onclick="saveTimer()">Criar ⏱️</button>
+  </div>
+</div>
+</div>
+
+<!-- Frozen Add -->
+<div class="overlay" id="frozenModal">
+<div class="mbox">
+  <div class="mrow"><div class="mtitle">🧊 Nova Porção</div><button class="btn-ghost" onclick="closeModal('frozenModal')" style="font-size:22px">✕</button></div>
+  <div class="eg" id="fEG"></div>
+  <input class="inp" id="fName" placeholder="Nome (ex: Feijão Caseiro)" style="margin-bottom:10px">
+  <input class="inp" id="fSub" placeholder="Descrição (ex: Potes de 500ml)" style="margin-bottom:10px">
+  <input class="inp" id="fQty" type="number" min="0" value="1" placeholder="Quantidade" style="margin-bottom:14px">
+  <div style="display:flex;gap:10px">
+    <button class="btn-s" style="flex:1" onclick="closeModal('frozenModal')">Cancelar</button>
+    <button class="btn-p" style="flex:1" onclick="saveFrozen()">Adicionar 🧊</button>
+  </div>
+</div>
+</div>
+
+<!-- Mural -->
+<div class="overlay" id="muralModal">
+<div class="mbox">
+  <div class="mrow"><div class="mtitle">🎀 Nova Inspiração</div><button class="btn-ghost" onclick="closeModal('muralModal')" style="font-size:22px">✕</button></div>
+  <div class="eg" id="muEG"></div>
+  <textarea class="inp" id="muTxt" placeholder="Escreva sua reflexão, inspiração..." rows="5" style="resize:none;margin-bottom:14px"></textarea>
+  <div style="display:flex;gap:10px">
+    <button class="btn-s" style="flex:1" onclick="closeModal('muralModal')">Cancelar</button>
+    <button class="btn-p" style="flex:1" onclick="saveMural()">Salvar 🎀</button>
+  </div>
+</div>
+</div>
+
+<!-- Shop Add -->
+<div class="overlay" id="shopModal">
+<div class="mbox">
+  <div class="mrow"><div class="mtitle">🛒 Adicionar Item</div><button class="btn-ghost" onclick="closeModal('shopModal')" style="font-size:22px">✕</button></div>
+  <input class="inp" id="shItem" placeholder="Nome do produto (ex: Arroz)" style="margin-bottom:10px">
+  <input class="inp" id="shQty" placeholder="Quantidade (ex: 2kg, 1 caixa, 3 unid)" style="margin-bottom:10px">
+  <div style="margin-bottom:10px">
+    <div class="section-label" style="margin-bottom:8px">Tipo</div>
+    <div style="display:flex;gap:8px">
+      <button id="shTypeBuy" class="btn-p" style="flex:1;font-size:13px" onclick="shSetType('comprar')">🛒 Vou Comprar</button>
+      <button id="shTypeHave" class="btn-s" style="flex:1;font-size:13px" onclick="shSetType('tenho')">🏠 Já Tenho</button>
+    </div>
+  </div>
+  <select class="sel" id="shCat" style="margin-bottom:14px">
+    <option value="mercado">🛒 Mercado</option>
+    <option value="farmacia">💊 Farmácia</option>
+    <option value="limpeza">🧹 Limpeza</option>
+    <option value="outros">📦 Outros</option>
+  </select>
+  <div style="display:flex;gap:10px">
+    <button class="btn-s" style="flex:1" onclick="closeModal('shopModal')">Cancelar</button>
+    <button class="btn-p" style="flex:1" onclick="saveShop()">Adicionar ✅</button>
+  </div>
+</div>
+</div>
+
+<!-- Edit -->
+<div class="overlay" id="editModal">
+<div class="mbox">
+  <div class="mrow"><div class="mtitle" id="editTitle">Editar</div><button class="btn-ghost" onclick="closeModal('editModal')" style="font-size:22px">✕</button></div>
+  <input class="inp" id="editInp" style="margin-bottom:14px">
+  <div style="display:flex;gap:10px">
+    <button class="btn-s" style="flex:1" onclick="closeModal('editModal')">Cancelar</button>
+    <button class="btn-p" style="flex:1" onclick="confirmEdit()">Salvar</button>
+  </div>
+</div>
+</div>
+
+<script>
+// ============================================================
+// STATE
+// ============================================================
+const booksOfBible = ['Gênesis','Êxodo','Levítico','Números','Deuteronômio','Josué','Juízes','Rute','1 Samuel','2 Samuel','1 Reis','2 Reis','1 Crônicas','2 Crônicas','Esdras','Neemias','Ester','Jó','Salmos','Provérbios','Eclesiastes','Cânticos','Isaías','Jeremias','Lamentações','Ezequiel','Daniel','Oséias','Joel','Amós','Obadias','Jonas','Miquéias','Naum','Habacuque','Sofonias','Ageu','Zacarias','Malaquias','Mateus','Marcos','Lucas','João','Atos','Romanos','1 Coríntios','2 Coríntios','Gálatas','Efésios','Filipenses','Colossenses','1 Tessalonicenses','2 Tessalonicenses','1 Timóteo','2 Timóteo','Tito','Filemom','Hebreus','Tiago','1 Pedro','2 Pedro','1 João','2 João','3 João','Judas','Apocalipse'];
+
+const verses = [
+  {text:'Tudo posso naquele que me fortalece.',ref:'Filipenses 4:13'},
+  {text:'O Senhor é o meu pastor, nada me faltará.',ref:'Salmos 23:1'},
+  {text:'Porque sou eu que conheço os planos que tenho para vocês.',ref:'Jeremias 29:11'},
+  {text:'Busquem primeiro o reino de Deus e a sua justiça.',ref:'Mateus 6:33'},
+  {text:'Fortaleça-se e seja corajoso! Não se apavore.',ref:'Josué 1:9'},
+  {text:'Confie no Senhor de todo o seu coração.',ref:'Provérbios 3:5'},
+  {text:'Cultivem o amor fraternal. Amem uns aos outros.',ref:'Romanos 12:10'},
+];
+
+const dayFocus = [
+  '🕊️ Domingo: descanso e gratidão',
+  '📖 Segunda: leia algo novo hoje',
+  '🙏 Terça: ore pelos outros',
+  '📝 Quarta: escreva no diário',
+  '🌟 Quinta: revise suas metas',
+  '✉️ Sexta: prepare o serviço',
+  '💒 Sábado: dia de serviço e reunião',
+];
+
+const sitioFrases = [
+  'Cultive o amor e colha a alegria. Cada semente é um recomeço! ✨',
+  'A horta ensina que coisas boas levam tempo para crescer. 🌱',
+  'Uma casa organizada traz paz ao coração. 💕',
+  'Cozinhar é um ato de amor que alimenta a alma. ❤️',
+];
+
+const defaultState = {
+  theme:'pink', dark:false, fs:'normal',
+  shine:0, water:3,
+  missions:{
+    Manhã:[
+      {id:1,text:'Oração matinal',emoji:'🙏',done:false},
+      {id:2,text:'Tomar primeiro copo de água',emoji:'💧',done:false},
+      {id:3,text:'Ler versículo do dia',emoji:'📖',done:false},
+      {id:4,text:'Tomar café da manhã',emoji:'☕',done:false},
+      {id:5,text:'Fazer cama',emoji:'🛏️',done:false},
+      {id:6,text:'Tomar banho e se arrumar',emoji:'🚿',done:false},
+      {id:7,text:'Tomar vitaminas/suplementos',emoji:'💊',done:false},
+      {id:8,text:'Verificar agenda do dia',emoji:'📅',done:false},
+    ],
+    Tarde:[
+      {id:9,text:'Almoço saudável',emoji:'🥗',done:false},
+      {id:10,text:'Caminhada 20 minutos',emoji:'🚶‍♀️',done:false},
+      {id:11,text:'Beber água (2 copos)',emoji:'💧',done:false},
+      {id:12,text:'Descanso de 15 minutos',emoji:'😌',done:false},
+      {id:13,text:'Cuidar da horta',emoji:'🌱',done:false},
+      {id:14,text:'Verificar congelados',emoji:'🧊',done:false},
+      {id:15,text:'Tarefa da casa',emoji:'🏡',done:false},
+    ],
+    Noite:[
+      {id:16,text:'Jantar leve',emoji:'🍽️',done:false},
+      {id:17,text:'Skincare noturno',emoji:'🌙',done:false},
+      {id:18,text:'Escrever 3 gratidões do dia',emoji:'✍️',done:false},
+      {id:19,text:'Leitura espiritual',emoji:'📖',done:false},
+      {id:20,text:'Oração da noite',emoji:'🙏',done:false},
+      {id:21,text:'Preparar roupas do dia seguinte',emoji:'👗',done:false},
+      {id:22,text:'Desligar telas às 21h',emoji:'📵',done:false},
+      {id:23,text:'Dormir no horário certo',emoji:'😴',done:false},
+    ],
+    Semana:[
+      {id:24,text:'Organizar guarda-roupa',emoji:'👗',done:false},
+      {id:25,text:'Ligar para a família',emoji:'📞',done:false},
+      {id:26,text:'Limpeza geral da casa',emoji:'🧹',done:false},
+      {id:27,text:'Planejamento da semana',emoji:'🎯',done:false},
+      {id:28,text:'Fazer lista de compras',emoji:'🛒',done:false},
+      {id:29,text:'Preparar marmitas da semana',emoji:'🍱',done:false},
+      {id:30,text:'Lavar e secar roupas',emoji:'🫧',done:false},
+      {id:31,text:'Trocar lençóis e fronhas',emoji:'🛏️',done:false},
+      {id:32,text:'Estudar algo novo',emoji:'📚',done:false},
+    ]
+  },
+  spiritual:{
+    book:'Gênesis', chapter:1, verse:1, lastDate:'', streak:0,
+    readings:[],
+    activities:[
+      {id:1,text:'Preparação da Reunião',sub:'Quarta-feira',emoji:'📖',done:false},
+      {id:2,text:'Estudo da Sentinela',sub:'Leitura e comentários',emoji:'📝',done:false},
+      {id:3,text:'Escrever Cartas',sub:'Testemunho por carta',emoji:'✉️',done:false},
+      {id:4,text:'Campo pelo Zoom',sub:'Quarta, 08:00',emoji:'💻',done:false},
+      {id:5,text:'Oração intercessória',sub:'Orar pelos outros',emoji:'🙏',done:false},
+      {id:6,text:'Estudo bíblico pessoal',sub:'30 minutos de leitura',emoji:'📖',done:false},
+      {id:7,text:'Visita a irmãos',sub:'Encorajamento pessoal',emoji:'🫶',done:false},
+      {id:8,text:'Pregação de porta em porta',sub:'Trabalho de campo',emoji:'🚪',done:false},
+    ],
+    prayers:[],
+    meetings:[],
+    goals:[
+      {id:1,text:'Ler a Bíblia inteira',target:66,current:0},
+      {id:2,text:'30 dias de oração diária',target:30,current:0},
+      {id:3,text:'Escrever 10 cartas',target:10,current:0},
+    ],
+    cartas:0,
+    familyTasks:[
+      {id:1,text:'Oração em família pela manhã',done:false},
+      {id:2,text:'Leitura bíblica juntos',done:false},
+      {id:3,text:'Culto familiar noturno',done:false},
+      {id:4,text:'Estudar publicação juntos',done:false},
+      {id:5,text:'Conversar sobre valores espirituais',done:false},
+    ],
+    notes:'',
+    sentinela:false,
+    prayerRem:{morning:true,meal:true,night:true},
+  },
+  casa:{
+    lavanderia:[
+      {t:'Lavou',d:false},
+      {t:'Pendurou',d:false},
+      {t:'Dobrou',d:false},
+      {t:'Passou a ferro',d:false},
+      {t:'Guardou',d:false},
+    ],
+    limpDiaria:[
+      {t:'Arrumar Cama ✨',d:false,gold:true},
+      {t:'Varrer a sala',d:false},
+      {t:'Passar pano na sala',d:false},
+      {t:'Lavar a louça',d:false},
+      {t:'Limpar pia da cozinha',d:false},
+      {t:'Limpar fogão por fora',d:false},
+      {t:'Limpar bancada da cozinha',d:false},
+      {t:'Limpeza do Banheiro',d:false},
+      {t:'Limpar pia do banheiro',d:false},
+      {t:'Varrer o quarto',d:false},
+      {t:'Organizar o quarto',d:false},
+      {t:'Tirar o lixo',d:false},
+      {t:'Varrer a área/quintal',d:false},
+      {t:'Passar pano no corredor',d:false},
+    ],
+    limpManha:[
+      {t:'Arrumar a cama logo ao levantar',d:false},
+      {t:'Varrer a cozinha',d:false},
+      {t:'Lavar louça do café da manhã',d:false},
+      {t:'Limpar bancada da cozinha',d:false},
+      {t:'Jogar lixo orgânico',d:false},
+      {t:'Organizar sala rapidinho',d:false},
+    ],
+    limpTarde:[
+      {t:'Lavar louça do almoço',d:false},
+      {t:'Limpar fogão após cozinhar',d:false},
+      {t:'Varrer área de serviço',d:false},
+      {t:'Recolher roupas do varal',d:false},
+      {t:'Regar plantas internas',d:false},
+      {t:'Organizar mesas e superfícies',d:false},
+    ],
+    limpNoite:[
+      {t:'Lavar louça do jantar',d:false},
+      {t:'Limpar pia e fogão',d:false},
+      {t:'Varrer cozinha',d:false},
+      {t:'Preparar roupa para amanhã',d:false},
+      {t:'Organizar bolsa/mochila',d:false},
+      {t:'Fechar janelas e portas',d:false},
+      {t:'Apagar luzes desnecessárias',d:false},
+    ],
+    limpPesada:[
+      {t:'Trocar Lençóis',d:false},
+      {t:'Trocar fronhas',d:false},
+      {t:'Lavar tapetes pequenos',d:false},
+      {t:'Limpar geladeira por dentro',d:false},
+      {t:'Limpar geladeira por fora',d:false},
+      {t:'Lavar banheiro a fundo',d:false},
+      {t:'Limpar fogão por dentro',d:false},
+      {t:'Desentupir ralo do chuveiro',d:false},
+      {t:'Limpar micro-ondas',d:false},
+      {t:'Organizar armários da cozinha',d:false},
+      {t:'Limpar espelhos da casa',d:false},
+      {t:'Lavar cortinas',d:false},
+      {t:'Limpar portas e maçanetas',d:false},
+      {t:'Lavar vasilhas de pets',d:false},
+    ],
+    closetNota:'',
+    doacoes:'',
+    zonas:{
+      semanal:[
+        {id:1,name:'🛋️ Sala',tasks:[
+          {t:'Varrer o piso',d:false},
+          {t:'Passar pano úmido',d:false},
+          {t:'Limpar móveis com pano',d:false},
+          {t:'Limpar vidros e janelas',d:false},
+          {t:'Organizar almofadas e sofá',d:false},
+          {t:'Limpar ventilador',d:false},
+          {t:'Tirar pó de quadros e enfeites',d:false},
+          {t:'Limpar interruptores de luz',d:false},
+        ]},
+        {id:2,name:'🍳 Cozinha',tasks:[
+          {t:'Limpar fogão por fora',d:false},
+          {t:'Limpar pia a fundo',d:false},
+          {t:'Limpar geladeira por fora',d:false},
+          {t:'Limpar bancadas',d:false},
+          {t:'Varrer e passar pano no piso',d:false},
+          {t:'Limpar torneira e ralo',d:false},
+          {t:'Organizar despensa',d:false},
+          {t:'Limpar micro-ondas por fora',d:false},
+        ]},
+        {id:3,name:'🛁 Banheiro',tasks:[
+          {t:'Limpar vaso sanitário',d:false},
+          {t:'Limpar pia e torneira',d:false},
+          {t:'Limpar espelho',d:false},
+          {t:'Limpar chuveiro',d:false},
+          {t:'Lavar piso do banheiro',d:false},
+          {t:'Repor papel higiênico',d:false},
+          {t:'Repor sabonete e shampoo',d:false},
+          {t:'Trocar tapetinho do banheiro',d:false},
+        ]},
+        {id:4,name:'🛏️ Quarto',tasks:[
+          {t:'Trocar roupa de cama',d:false},
+          {t:'Varrer o piso',d:false},
+          {t:'Passar pano úmido',d:false},
+          {t:'Organizar guarda-roupa',d:false},
+          {t:'Limpar espelho do quarto',d:false},
+          {t:'Tirar pó de móveis',d:false},
+          {t:'Organizar criado-mudo',d:false},
+          {t:'Limpar embaixo da cama',d:false},
+        ]},
+        {id:5,name:'🌿 Área Externa',tasks:[
+          {t:'Varrer calçada e entrada',d:false},
+          {t:'Regar plantas e flores',d:false},
+          {t:'Limpar área de serviço',d:false},
+          {t:'Organizar ferramentas',d:false},
+          {t:'Limpar varanda/quintal',d:false},
+          {t:'Verificar lixeiras externas',d:false},
+        ]},
+        {id:6,name:'🚗 Garagem/Entrada',tasks:[
+          {t:'Varrer garagem',d:false},
+          {t:'Organizar calçados na entrada',d:false},
+          {t:'Limpar capacho',d:false},
+          {t:'Organizar itens da garagem',d:false},
+        ]},
+      ],
+      mensal:[
+        {id:1,name:'🪟 Janelas e Vidros',tasks:[
+          {t:'Lavar vidros por fora',d:false},
+          {t:'Lavar vidros por dentro',d:false},
+          {t:'Limpar trilhos das janelas',d:false},
+          {t:'Lavar persianas',d:false},
+          {t:'Lavar cortinas',d:false},
+          {t:'Limpar grades e telas',d:false},
+        ]},
+        {id:2,name:'🧺 Lavanderia',tasks:[
+          {t:'Limpar máquina de lavar',d:false},
+          {t:'Limpar tanque',d:false},
+          {t:'Organizar produtos de limpeza',d:false},
+          {t:'Lavar piso da lavanderia',d:false},
+          {t:'Limpar filtro da máquina',d:false},
+        ]},
+        {id:3,name:'🫙 Armários e Gavetas',tasks:[
+          {t:'Organizar armário da cozinha',d:false},
+          {t:'Limpar prateleiras da cozinha',d:false},
+          {t:'Organizar armário do banheiro',d:false},
+          {t:'Organizar guarda-roupa completo',d:false},
+          {t:'Limpar despensa',d:false},
+          {t:'Organizar gavetas',d:false},
+        ]},
+        {id:4,name:'🏡 Limpeza Profunda',tasks:[
+          {t:'Limpar paredes e rodapés',d:false},
+          {t:'Lavar tapetes grandes',d:false},
+          {t:'Limpar lustre e luminárias',d:false},
+          {t:'Limpar ar-condicionado/ventilador teto',d:false},
+          {t:'Dedetização preventiva',d:false},
+          {t:'Lavar calçadas com água',d:false},
+          {t:'Limpar caixas d\'água (verificar)',d:false},
+        ]},
+        {id:5,name:'🍳 Cozinha Profunda',tasks:[
+          {t:'Limpar fogão por dentro',d:false},
+          {t:'Limpar geladeira por dentro',d:false},
+          {t:'Limpar micro-ondas por dentro',d:false},
+          {t:'Organizar e descartar alimentos vencidos',d:false},
+          {t:'Limpar exaustor/coifa',d:false},
+          {t:'Lavar lixeiras',d:false},
+        ]},
+      ],
+    }
+  },
+  cozinha:{
+    producao:[
+      {t:'Preparar lenha 🪵',d:false},
+      {t:'Acender fogão 🔥',d:false},
+      {t:'Cozinhar feijão 🍲',d:false},
+      {t:'Cozinhar arroz 🍚',d:false},
+      {t:'Preparar proteína da semana 🥩',d:false},
+      {t:'Fazer suco natural 🍊',d:false},
+      {t:'Preparar legumes cozidos 🥕',d:false},
+      {t:'Etiquetar marmitas 🏷️',d:false},
+      {t:'Organizar geladeira',d:false},
+      {t:'Separar congelados do dia',d:false},
+    ],
+    congelados:[
+      {id:1,name:'Feijão Caseiro',sub:'Potes de 500ml',emoji:'🫘',qty:5},
+      {id:2,name:'Carnes Variadas',sub:'Porções individuais',emoji:'🥩',qty:8},
+      {id:3,name:'Marmitas Prontas',sub:'Refeições completas',emoji:'🍱',qty:12},
+      {id:4,name:'Frango Cozido',sub:'Desfiado e temperado',emoji:'🍗',qty:6},
+      {id:5,name:'Sopa Caseira',sub:'Porções de 300ml',emoji:'🥣',qty:4},
+      {id:6,name:'Bolo Caseiro',sub:'Fatias individuais',emoji:'🍰',qty:8},
+    ],
+    fogao:[
+      {t:'Limpeza das cinzas diária',d:false},
+      {t:'Organizar lenha seca',d:false},
+      {t:'Polir a chapa de ferro',d:false},
+      {t:'Verificar tiragem da chaminé',d:false},
+      {t:'Limpar ao redor do fogão',d:false},
+    ],
+    notas:'',
+  },
+  sitio:{
+    frase:0,
+    dailyChallengeDone:false,
+    cuidados:[
+      {id:1,text:'Plantio (almeirão, mudas)',emoji:'🌱',done:false},
+      {id:2,text:'Regar horta pela manhã',emoji:'💧',done:false},
+      {id:3,text:'Tirar mato e ervas daninhas',emoji:'🌿',done:false},
+      {id:4,text:'Rastelar e adubar a terra',emoji:'🚜',done:false},
+      {id:5,text:'Colher o que está maduro',emoji:'🧺',done:false},
+      {id:6,text:'Verificar o pomar',emoji:'🍎',done:false},
+      {id:7,text:'Cuidar das mudas novas',emoji:'🪴',done:false},
+      {id:8,text:'Verificar irrigação',emoji:'💦',done:false},
+      {id:9,text:'Aplicar composto orgânico',emoji:'♻️',done:false},
+      {id:10,text:'Fotografar o crescimento',emoji:'📸',done:false},
+    ],
+    especiais:[
+      {id:1,text:'Cuidar do riachinho',sub:'Verificar fluxo 🌊',done:false},
+      {id:2,text:'Cuidar das flores',sub:'Adubar e podar 🌸',done:false},
+      {id:3,text:'Verificar animais',sub:'Alimentar e cuidar 🐔',done:false},
+      {id:4,text:'Manutenção das cercas',sub:'Verificar e reparar 🔧',done:false},
+    ],
+  },
+  brilhar:{
+    henneDate:'',henneNotes:'',crono:'Hidratação',
+    cronograma:[{l:'Hidratação',s:'Pendente'},{l:'Nutrição',s:'Concluído'},{l:'Reconstrução',s:'Próxima'}],
+    depi:{area:'Pernas',ultima:'',proxima:''},
+    unhas:{cor:'',ultima:'',proxima:''},
+    oleo:false,
+    custom:[
+      {text:'Esfoliação corporal',done:false},
+      {text:'Máscara facial',done:false},
+      {text:'Hidratação labial',done:false},
+      {text:'Automassagem nos pés',done:false},
+      {text:'Escova dental + fio dental',done:false},
+      {text:'Beber água com limão',done:false},
+    ],
+  },
+  timers:[
+    {id:1,name:'Máscara capilar',total:1800,left:1800,running:false,done:false},
+    {id:2,name:'Meditação matinal',total:600,left:600,running:false,done:false},
+    {id:3,name:'Descanso dos olhos',total:300,left:300,running:false,done:false},
+  ],
+  mural:[],
+  shopping:{
+    mercado:[
+      {id:1,text:'Arroz',qty:'2kg',type:'comprar',done:false},
+      {id:2,text:'Feijão',qty:'1kg',type:'comprar',done:false},
+      {id:3,text:'Frango',qty:'1kg',type:'comprar',done:false},
+      {id:4,text:'Ovos',qty:'1 dúzia',type:'comprar',done:false},
+      {id:5,text:'Leite',qty:'2 litros',type:'comprar',done:false},
+      {id:6,text:'Frutas da estação',qty:'à vontade',type:'comprar',done:false},
+      {id:7,text:'Legumes variados',qty:'1 saco',type:'comprar',done:false},
+      {id:8,text:'Azeite',qty:'1 garrafa',type:'tenho',done:false},
+      {id:9,text:'Sal',qty:'1 pacote',type:'tenho',done:false},
+      {id:10,text:'Açúcar',qty:'1kg',type:'tenho',done:false},
+    ],
+    farmacia:[
+      {id:11,text:'Vitamina C',qty:'1 caixa',type:'comprar',done:false},
+      {id:12,text:'Protetor solar',qty:'1 frasco',type:'comprar',done:false},
+      {id:13,text:'Creme hidratante',qty:'1 pote',type:'tenho',done:false},
+    ],
+    limpeza:[
+      {id:14,text:'Sabão em pó',qty:'1 caixa',type:'comprar',done:false},
+      {id:15,text:'Detergente',qty:'2 unid',type:'tenho',done:false},
+      {id:16,text:'Amaciante',qty:'1 garrafa',type:'comprar',done:false},
+      {id:17,text:'Desinfetante',qty:'1 litro',type:'comprar',done:false},
+    ],
+    outros:[
+      {id:18,text:'Saco de lixo',qty:'1 pacote',type:'comprar',done:false},
+    ]
+  },
+  finance:{entries:[],balance:0},
+  sleep:{records:[],bed:'',wake:''},
+};
+
+let S = (() => {
+  try {
+    const saved = JSON.parse(localStorage.getItem('suAppV2'));
+    if(!saved) return JSON.parse(JSON.stringify(defaultState));
+    // Deep merge — arrays from saved data take priority (user data preserved)
+    // but we inject new default tasks if the saved list is shorter than default
+    const merge = (def, sv) => {
+      const out = {...def};
+      for(const k in sv) {
+        if(sv[k]!==null && typeof sv[k]==='object' && !Array.isArray(sv[k]) && typeof def[k]==='object' && !Array.isArray(def[k]))
+          out[k]=merge(def[k],sv[k]);
+        else if(Array.isArray(sv[k]) && Array.isArray(def[k])) {
+          // Keep saved array but append any default items with ids not present
+          const savedIds = new Set(sv[k].map(x=>x.id));
+          const newItems = def[k].filter(x=>x.id && !savedIds.has(x.id));
+          out[k] = [...sv[k], ...newItems];
+        } else out[k]=sv[k];
+      }
+      return out;
+    };
+    return merge(defaultState, saved);
+  } catch(e){ return JSON.parse(JSON.stringify(defaultState)); }
+})();
+
+// ============================================================
+// SAVE
+// ============================================================
+function save() {
+  localStorage.setItem('suAppV2', JSON.stringify(S));
+  const t = document.getElementById('toast');
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 1800);
+}
+
+function exportData() {
+  const blob = new Blob([JSON.stringify(S,null,2)], {type:'application/json'});
+  const a = document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='rotina-su-backup.json'; a.click();
+}
+
+function importData(e) {
+  const file = e.target.files[0]; if(!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => { try { S=JSON.parse(ev.target.result); save(); location.reload(); } catch(err){ alert('Arquivo inválido!'); } };
+  reader.readAsText(file);
+}
+
+// ============================================================
+// NAV
+// ============================================================
+const navItems = [
+  {icon:'🏠',label:'Início'},
+  {icon:'✅',label:'Missões'},
+  {icon:'🙏',label:'Fé'},
+  {icon:'🏡',label:'Casa'},
+  {icon:'🍳',label:'Cozinha'},
+  {icon:'🌿',label:'Sítio'},
+  {icon:'✨',label:'Beleza'},
+  {icon:'🏆',label:'Troféus'},
+];
+const topTitles = ['🏠 Início','✅ Afazeres','🙏 Minha Fé','🏡 Casa & Organização','🍳 Cozinha & Congelados','🌿 Sítio & Horta','✨ Beleza & Autocuidado','🏆 Conquistas'];
+
+let tab = 0;
+let mTab = 'Manhã', spTab = 'leitura', casaTab = 'lavanderia', shopTab = 'mercado', cleanTab = 'semanal';
+let selEmoji = '🌸', frozenEmoji = '🍱', muralEmoji = '💭';
+let editCtx = {};
+let timerIntvl = null, timerIdx = null, timerLeft = 0;
+
+function setTab(i) {
+  tab=i;
+  document.getElementById('topTitle').textContent = topTitles[i];
+  document.getElementById('topSub').textContent = 'Rotina da Su 💗';
+  renderNav(); render();
+  document.getElementById('content').scrollTop = 0;
+}
+
+function renderNav() {
+  document.getElementById('bnav').innerHTML = navItems.map((n,i)=>
+    `<button class="bnav-btn ${tab===i?'act':''}" onclick="setTab(${i})">
+      <span class="bi">${n.icon}</span>
+      <span class="bl">${n.label}</span>
+    </button>`).join('');
+  document.getElementById('fab').style.display = [0,1,2,3,4,5,6,7].includes(tab)?'flex':'none';
+}
+
+function handleFab() {
+  if(tab===0) openModal('addModal');
+  else if(tab===1) openModal('addModal');
+  else if(tab===2) openModal('prayerModal');
+  else if(tab===4) openModal('frozenModal');
+  else openModal('addModal');
+}
+
+// ============================================================
+// MODALS
+// ============================================================
+function openModal(id) {
+  document.getElementById(id).classList.add('open');
+  if(id==='settingsModal') buildSettings();
+  if(id==='readModal') { const s=document.getElementById('rBook'); if(s&&!s.children.length) booksOfBible.forEach(b=>{const o=document.createElement('option');o.textContent=b;s.appendChild(o);}); s.value=S.spiritual.book; }
+  buildEmojiGrids();
+}
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+// ============================================================
+// SETTINGS
+// ============================================================
+const palettes = [
+  {name:'Rosa',cls:'pink',c1:'#F72585',c2:'#c471ed'},
+  {name:'Roxo',cls:'lilas',c1:'#9b59b6',c2:'#e91e8c'},
+  {name:'Azul',cls:'blue',c1:'#4a90d9',c2:'#9b59b6'},
+  {name:'Verde',cls:'green',c1:'#27ae60',c2:'#1abc9c'},
+  {name:'Dourado',cls:'gold',c1:'#d4a017',c2:'#F72585'},
+  {name:'Tiffany',cls:'tiff',c1:'#0abfbc',c2:'#0799b5'},
+];
+
+function buildSettings() {
+  const g = document.getElementById('palGrid');
+  if(g) g.innerHTML = palettes.map(p=>`
+    <div onclick="setPal('${p.cls}','${p.c1}','${p.c2}')" style="width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,${p.c1},${p.c2});cursor:pointer;border:3px solid ${S.theme===p.cls?'#333':'transparent'};transition:.2s;display:flex;align-items:center;justify-content:center">
+      ${S.theme===p.cls?'<span style="color:white;font-size:16px">✓</span>':''}
+    </div>`).join('');
+  const dt = document.getElementById('darkToggle');
+  if(dt) { if(S.dark) dt.classList.add('on'); else dt.classList.remove('on'); }
+}
+
+function setPal(cls, c1, c2) {
+  S.theme=cls;
+  document.documentElement.style.setProperty('--pink',c1);
+  document.documentElement.style.setProperty('--pink2',c1);
+  document.documentElement.style.setProperty('--purple',c2);
+  document.documentElement.style.setProperty('--grad',`linear-gradient(135deg,${c1},${c2})`);
+  save(); buildSettings();
+}
+
+function toggleDark() {
+  S.dark=!S.dark;
+  if(S.dark) {
+    document.documentElement.style.setProperty('--bg','#1a0a12');
+    document.documentElement.style.setProperty('--card','#2d1520');
+    document.documentElement.style.setProperty('--text','#f0d6e4');
+    document.documentElement.style.setProperty('--border','#5a2040');
+    document.documentElement.style.setProperty('--pink5','#3d1e2d');
+    document.documentElement.style.setProperty('--pink4','#4d2535');
+  } else {
+    document.documentElement.style.setProperty('--bg','#f8f8f8');
+    document.documentElement.style.setProperty('--card','#fff');
+    document.documentElement.style.setProperty('--text','#1a1a2e');
+    document.documentElement.style.setProperty('--border','#f0e0e8');
+    document.documentElement.style.setProperty('--pink5','#fff0f5');
+    document.documentElement.style.setProperty('--pink4','#fff0f5');
+  }
+  save(); buildSettings();
+}
+
+function setFS(sz) {
+  S.fs=sz; const m={small:'13px',normal:'15px',large:'17px'};
+  document.documentElement.style.setProperty('--fs',m[sz]); save();
+}
+
+// ============================================================
+// EMOJIS
+// ============================================================
+const emojis = ['🌸','💪','📖','🙏','💧','🌙','✨','👑','🌺','🎯','💝','🕊️','🌿','🦋','🎀','🏡','☀️','🌈','💫','🌻','🫘','🥩','🍱','🍲','🥗','🧊','🌱','🍅'];
+function buildEmojiGrids() {
+  [['mEG','selEmoji'],['fEG','frozenEmoji'],['muEG','muralEmoji']].forEach(([id,vname])=>{
+    const el=document.getElementById(id); if(!el) return;
+    el.innerHTML=emojis.map(e=>`<button class="ebtn ${window[vname]===e?'sel':''}" onclick="pick('${id}','${vname}','${e}')">${e}</button>`).join('');
+  });
+}
+function pick(gridId, varName, e) { window[varName]=e; buildEmojiGrids(); }
+
+// ============================================================
+// MISSIONS
+// ============================================================
+function saveMission() {
+  const txt=document.getElementById('mTxt').value.trim(); if(!txt) return;
+  const per=document.getElementById('mPer').value;
+  S.missions[per].push({id:Date.now(),text:txt,emoji:selEmoji,done:false});
+  save(); closeModal('addModal'); document.getElementById('mTxt').value=''; render();
+}
+function toggleMission(per, id) {
+  const m=S.missions[per].find(x=>x.id===id); if(!m) return;
+  m.done=!m.done; if(m.done) S.shine+=2; save(); render();
+}
+function delMission(per, id) {
+  S.missions[per]=S.missions[per].filter(x=>x.id!==id); save(); render();
+}
+function editMission(per, id) {
+  const m=S.missions[per].find(x=>x.id===id); if(!m) return;
+  openEdit('✏️ Editar missão', m.text, (v)=>{ m.text=v; save(); render(); });
+}
+
+// ============================================================
+// SPIRITUAL
+// ============================================================
+function saveReading() {
+  const book=document.getElementById('rBook').value;
+  const chap=document.getElementById('rChap').value||'1';
+  const verse=document.getElementById('rVerse').value||'1';
+  const note=document.getElementById('rNote').value.trim();
+  S.spiritual.book=book; S.spiritual.chapter=parseInt(chap); S.spiritual.verse=parseInt(verse);
+  S.spiritual.readings.push({id:Date.now(),book,chapter:chap,verse,note,date:new Date().toLocaleDateString('pt-BR')});
+  const today=new Date().toDateString();
+  if(S.spiritual.lastDate!==today){S.spiritual.streak=(S.spiritual.streak||0)+1;S.spiritual.lastDate=today;}
+  S.shine+=3; save(); closeModal('readModal'); render();
+}
+function savePrayer() {
+  const txt=document.getElementById('pTxt').value.trim(); if(!txt) return;
+  S.spiritual.prayers.push({id:Date.now(),text:txt,answered:false,date:new Date().toLocaleDateString('pt-BR')});
+  save(); closeModal('prayerModal'); document.getElementById('pTxt').value=''; render();
+}
+function toggleActivity(id) {
+  const a=S.spiritual.activities.find(x=>x.id===id); if(!a) return;
+  a.done=!a.done; if(a.done) S.shine+=3; save(); render();
+}
+function saveMeeting() {
+  const t=document.getElementById('meTitle').value.trim(); if(!t) return;
+  S.spiritual.meetings.push({id:Date.now(),title:t,date:document.getElementById('meDate').value,time:document.getElementById('meTime').value,prep:document.getElementById('mePrep').value.trim(),done:false});
+  save(); closeModal('meetModal'); render();
+}
+function saveGoal() {
+  const t=document.getElementById('gTxt').value.trim(); if(!t) return;
+  S.spiritual.goals.push({id:Date.now(),text:t,target:parseInt(document.getElementById('gTarget').value)||30,current:0});
+  save(); closeModal('goalModal'); render();
+}
+
+// ============================================================
+// FROZEN / COZINHA
+// ============================================================
+function saveFrozen() {
+  const name=document.getElementById('fName').value.trim(); if(!name) return;
+  S.cozinha.congelados.push({id:Date.now(),name,sub:document.getElementById('fSub').value.trim(),emoji:frozenEmoji,qty:parseInt(document.getElementById('fQty').value)||1});
+  save(); closeModal('frozenModal'); render();
+}
+function adjFrozen(id, d) {
+  const item=S.cozinha.congelados.find(x=>x.id===id); if(!item) return;
+  item.qty=Math.max(0,item.qty+d); save(); render();
+}
+
+// ============================================================
+// TIMERS
+// ============================================================
+const presets=[{l:'5 min',s:300},{l:'10 min',s:600},{l:'15 min',s:900},{l:'20 min',s:1200},{l:'30 min',s:1800}];
+function saveTimer() {
+  const name=document.getElementById('tmName').value.trim()||'Timer';
+  const m=parseInt(document.getElementById('tmMins').value)||0;
+  const s2=parseInt(document.getElementById('tmSecs').value)||0;
+  const total=m*60+s2; if(total<=0) return;
+  S.timers.push({id:Date.now(),name,total,left:total,running:false,done:false});
+  save(); closeModal('timerModal'); render();
+}
+function startPreset(s2) {
+  S.timers.push({id:Date.now(),name:`${s2/60} min`,total:s2,left:s2,running:false,done:false});
+  startTimer(S.timers.length-1); save(); render();
+}
+function startTimer(i) {
+  if(timerIntvl) clearInterval(timerIntvl);
+  timerIdx=i; S.timers[i].running=true; S.timers[i].done=false; timerLeft=S.timers[i].left;
+  timerIntvl=setInterval(()=>{
+    timerLeft--; S.timers[timerIdx].left=timerLeft;
+    if(timerLeft<=0){ clearInterval(timerIntvl); timerIntvl=null; S.timers[timerIdx].running=false; S.timers[timerIdx].done=true; S.timers[timerIdx].left=0; beep(); save(); render(); return; }
+    updateTimerDisplay();
+  },1000);
+}
+function stopTimer(i) {
+  if(timerIdx===i&&timerIntvl){clearInterval(timerIntvl);timerIntvl=null;}
+  S.timers[i].running=false; save(); render();
+}
+function resetTimer(i) {
+  stopTimer(i); S.timers[i].left=S.timers[i].total; S.timers[i].done=false; save(); render();
+}
+function delTimer(i) {
+  if(timerIdx===i&&timerIntvl)clearInterval(timerIntvl);
+  S.timers.splice(i,1); save(); render();
+}
+function updateTimerDisplay() {
+  const el=document.getElementById('td_'+timerIdx); if(el) el.textContent=fmt(timerLeft);
+}
+function fmt(s){const m=Math.floor(s/60),sec=s%60;return`${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;}
+function beep(){try{const c=new(window.AudioContext||window.webkitAudioContext)();[0,.2,.4].forEach(t=>{const o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.value=880;g.gain.setValueAtTime(.3,c.currentTime+t);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+t+.15);o.start(c.currentTime+t);o.stop(c.currentTime+t+.15);});}catch(e){}}
+
+// ============================================================
+// MURAL / SHOP
+// ============================================================
+function saveMural() {
+  const txt=document.getElementById('muTxt').value.trim(); if(!txt) return;
+  S.mural.push({id:Date.now(),text:txt,emoji:muralEmoji,date:new Date().toLocaleDateString('pt-BR')});
+  save(); closeModal('muralModal'); document.getElementById('muTxt').value=''; render();
+}
+let shType = 'comprar';
+function shSetType(t) {
+  shType=t;
+  document.getElementById('shTypeBuy').className=t==='comprar'?'btn-p':'btn-s';
+  document.getElementById('shTypeBuy').style.flex='1'; document.getElementById('shTypeBuy').style.fontSize='13px';
+  document.getElementById('shTypeHave').className=t==='tenho'?'btn-p':'btn-s';
+  document.getElementById('shTypeHave').style.flex='1'; document.getElementById('shTypeHave').style.fontSize='13px';
+}
+function saveShop() {
+  const item=document.getElementById('shItem').value.trim(); if(!item) return;
+  const qty=document.getElementById('shQty').value.trim()||'1 unid';
+  const cat=document.getElementById('shCat').value;
+  if(!S.shopping[cat]) S.shopping[cat]=[];
+  S.shopping[cat].push({id:Date.now(),text:item,qty,type:shType,done:false});
+  save(); closeModal('shopModal');
+  document.getElementById('shItem').value='';
+  document.getElementById('shQty').value='';
+  render();
+}
+
+// ============================================================
+// EDIT
+// ============================================================
+function openEdit(title, val, fn) { editCtx.fn=fn; document.getElementById('editTitle').textContent=title; document.getElementById('editInp').value=val; openModal('editModal'); }
+function confirmEdit() { const v=document.getElementById('editInp').value.trim(); if(v&&editCtx.fn) editCtx.fn(v); closeModal('editModal'); render(); }
+
+// ============================================================
+// HELPERS
+// ============================================================
+function pct(done,total){return total>0?Math.round(done/total*100):0;}
+function pbar(done,total){const p=pct(done,total);return`<div style="display:flex;justify-content:space-between;font-size:12px;color:var(--sub);margin-bottom:5px"><span>${done}/${total}</span><span>${p}%</span></div><div class="pbar-wrap"><div class="pbar-fill" style="width:${p}%"></div></div>`;}
+function allMissions(){return Object.values(S.missions).flat();}
+function doneMissions(){return allMissions().filter(m=>m.done).length;}
+function totalMissions(){return allMissions().length;}
+
+function circ(p, sz=110) {
+  const r=46,cx=55,cy=55,C=2*Math.PI*r,off=C-(p/100)*C;
+  return `<svg width="${sz}" height="${sz}" viewBox="0 0 110 110">
+    <defs><linearGradient id="cg" x1="0%" y1="0%" x2="100%"><stop offset="0%" stop-color="var(--pink)"/><stop offset="100%" stop-color="var(--purple)"/></linearGradient></defs>
+    <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="var(--pink5)" stroke-width="10"/>
+    <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="url(#cg)" stroke-width="10" stroke-dasharray="${C}" stroke-dashoffset="${off}" stroke-linecap="round" transform="rotate(-90 ${cx} ${cy})" style="transition:.5s"/>
+    <text x="${cx}" y="${cy-3}" text-anchor="middle" fill="var(--pink)" font-size="20" font-weight="900" font-family="Nunito">${p}%</text>
+    <text x="${cx}" y="${cy+13}" text-anchor="middle" fill="var(--sub)" font-size="10" font-family="Nunito">progresso</text>
+  </svg>`;
+}
+
+// ============================================================
+// RENDER TABS
+// ============================================================
+
+// ---- HOME ----
+function renderHome() {
+  const h=new Date().getHours();
+  const greet=h<12?'Bom dia':h<18?'Boa tarde':'Boa noite';
+  const next=allMissions().find(m=>!m.done);
+  const nextPer=next?Object.keys(S.missions).find(p=>S.missions[p].find(m=>m.id===next.id)):null;
+  const verse=verses[new Date().getDay()];
+  const dp=pct(doneMissions(),totalMissions());
+
+  return `
+  <div style="text-align:center;margin-bottom:4px">
+    <div style="font-size:13px;font-weight:700;color:var(--sub)">${new Date().toLocaleDateString('pt-BR',{weekday:'long',day:'numeric',month:'long'})}</div>
+    <div style="font-size:20px;font-weight:900;color:var(--text)">Olá, linda! 💕</div>
+  </div>
+
+  <div style="display:flex;align-items:center;gap:14px;background:var(--card);border-radius:20px;padding:18px;margin-bottom:14px;box-shadow:0 2px 12px rgba(247,37,133,.07)">
+    ${circ(dp)}
+    <div style="flex:1">
+      <div style="font-weight:800;font-size:15px;color:var(--text)">Progresso Hoje</div>
+      <div style="font-size:13px;color:var(--sub);margin:4px 0">${doneMissions()} de ${totalMissions()} tarefas</div>
+      <div class="streak">🔥 ${S.spiritual.streak||0} dias</div>
+    </div>
+  </div>
+
+  <!-- Água -->
+  <div class="card">
+    <div class="card-title">💧 Água do Dia</div>
+    <div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:10px">
+      ${Array(8).fill(0).map((_,i)=>`<span onclick="setWater(${i<S.water?i:i+1})" style="font-size:26px;cursor:pointer;opacity:${i<S.water?1:.2};transition:.15s">💧</span>`).join('')}
+    </div>
+    <div style="display:flex;align-items:center;justify-content:space-between">
+      <span style="font-size:13px;color:var(--sub)">${S.water} de 8 copos</span>
+      <div style="display:flex;gap:8px">
+        <button class="cbtn" onclick="setWater(${S.water-1})">−</button>
+        <button class="cbtn plus" onclick="setWater(${S.water+1})">+</button>
+      </div>
+    </div>
+  </div>
+
+  ${next?`
+  <div style="background:var(--grad);border-radius:20px;padding:18px;margin-bottom:14px;color:#fff;box-shadow:0 5px 18px rgba(247,37,133,.35)">
+    <div style="font-size:12px;opacity:.85;margin-bottom:5px">🎯 Próxima missão</div>
+    <div style="font-size:17px;font-weight:900;margin-bottom:14px">${next.emoji} ${next.text}</div>
+    <button onclick="toggleMission('${nextPer}',${next.id})" style="background:#fff;color:var(--pink);border:none;border-radius:30px;padding:10px 22px;font-weight:800;cursor:pointer;font-size:14px;font-family:'Nunito',sans-serif">✓ Concluir!</button>
+  </div>`:'<div class="card" style="text-align:center;font-weight:800;color:var(--pink)">🎉 Todas as missões concluídas!</div>'}
+
+  <!-- Atalhos -->
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-bottom:14px">
+    ${[{i:'✅',l:'Missões',t:null,onclick:'setTab(0)&&openModal(\'addModal\')'},
+      {i:'🙏',l:'Fé',t:1},{i:'🍳',l:'Cozinha',t:3},{i:'⏱️',l:'Timers',t:6}
+    ].map(a=>`<button onclick="${a.t!==null?'setTab('+a.t+')':'openModal(\'addModal\')'}" style="background:var(--card);border:1.5px solid var(--border);border-radius:14px;padding:12px 4px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px">
+      <span style="font-size:22px">${a.i}</span>
+      <span style="font-size:10px;color:var(--pink);font-weight:700">${a.l}</span>
+    </button>`).join('')}
+  </div>
+
+  <!-- Versículo -->
+  <div class="quote-box">
+    <div style="font-size:22px;margin-bottom:8px">🕊️</div>
+    <q>${verse.text}</q>
+    <cite>— ${verse.ref}</cite>
+  </div>`;
+}
+
+// ---- MISSÕES ----
+function renderMissoes() {
+  const periods = ['Manhã','Tarde','Noite','Semana'];
+  const icons = {Manhã:'🌅',Tarde:'☀️',Noite:'🌙',Semana:'📅'};
+  const list = S.missions[mTab]||[];
+  const done = list.filter(m=>m.done).length;
+  const total = list.length;
+  const pct = total>0?Math.round(done/total*100):0;
+
+  // Total geral
+  const allDone = Object.values(S.missions).flat().filter(m=>m.done).length;
+  const allTotal = Object.values(S.missions).flat().length;
+
+  return `
+  <!-- Resumo geral -->
+  <div style="background:var(--grad);border-radius:18px;padding:14px 18px;margin-bottom:14px;color:#fff;display:flex;align-items:center;justify-content:space-between">
+    <div>
+      <div style="font-size:11px;opacity:.8;font-weight:700">TOTAL DO DIA</div>
+      <div style="font-size:26px;font-weight:900">${allDone}/${allTotal}</div>
+    </div>
+    <div style="text-align:right">
+      <div style="font-size:11px;opacity:.8">✨ Brilho ganho</div>
+      <div style="font-size:22px;font-weight:900">${allDone*2}</div>
+    </div>
+  </div>
+
+  <!-- Abas de período -->
+  <div style="display:flex;gap:7px;margin-bottom:12px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none">
+    ${periods.map(p=>{
+      const pList=S.missions[p]||[];
+      const pDone=pList.filter(m=>m.done).length;
+      return `<button class="tab ${mTab===p?'on':''}" onclick="mTab='${p}';render()" style="position:relative">
+        ${icons[p]} ${p}
+        ${pList.length?`<span style="margin-left:4px;font-size:10px;opacity:.8">${pDone}/${pList.length}</span>`:''}
+      </button>`;
+    }).join('')}
+  </div>
+
+  <!-- Progress bar -->
+  <div class="card" style="padding:14px;margin-bottom:12px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+      <span style="font-weight:800;font-size:15px">${icons[mTab]} Tarefas de ${mTab}</span>
+      <span style="font-size:13px;font-weight:700;color:var(--pink)">${pct}%</span>
+    </div>
+    <div class="pbar-wrap"><div class="pbar-fill" style="width:${pct}%"></div></div>
+    <div style="font-size:12px;color:var(--sub);margin-top:6px">${done} de ${total} concluídas</div>
+  </div>
+
+  <!-- Lista de tarefas -->
+  ${list.length===0?`<div class="card" style="text-align:center;padding:28px">
+    <div style="font-size:40px;margin-bottom:8px">${icons[mTab]}</div>
+    <div style="font-weight:800;color:var(--sub)">Nenhuma tarefa de ${mTab} ainda</div>
+    <div style="font-size:13px;color:#bbb;margin-top:4px">Toque em + abaixo para começar!</div>
+  </div>`:''}
+
+  ${list.map((m)=>`
+  <div style="background:#fff;border-radius:16px;padding:14px 16px;margin-bottom:9px;display:flex;align-items:center;gap:12px;box-shadow:0 2px 10px rgba(247,37,133,.07);border-left:4px solid ${m.done?'#e0e0e0':'var(--pink)'}">
+    <div class="ck-circle ${m.done?'done':''}" onclick="toggleMission('${mTab}',${m.id})" style="flex-shrink:0;cursor:pointer"></div>
+    <span style="font-size:20px">${m.emoji}</span>
+    <span style="flex:1;font-size:14px;font-weight:700;${m.done?'text-decoration:line-through;color:#bbb;':'color:var(--text);'}">${m.text}</span>
+    <div style="display:flex;gap:4px">
+      <button style="background:var(--pink5);border:none;border-radius:8px;width:30px;height:30px;cursor:pointer;font-size:14px" onclick="editMission('${mTab}',${m.id})">✏️</button>
+      <button style="background:#fff0f0;border:none;border-radius:8px;width:30px;height:30px;cursor:pointer;font-size:14px" onclick="delMission('${mTab}',${m.id})">🗑️</button>
+    </div>
+  </div>`).join('')}
+
+  <!-- Botão adicionar -->
+  <button class="btn-p" style="width:100%;margin-top:8px" onclick="document.getElementById('mPer').value='${mTab}';openModal('addModal')">
+    ＋ Adicionar tarefa de ${mTab}
+  </button>
+
+  ${done===total&&total>0?`<div style="background:linear-gradient(135deg,#e8f5e9,#f0fff4);border-radius:16px;padding:20px;text-align:center;margin-top:14px;border:2px solid #a5d6a7">
+    <div style="font-size:36px">🎉</div>
+    <div style="font-weight:900;color:#27ae60;font-size:16px;margin-top:6px">Tudo concluído!</div>
+    <div style="font-size:13px;color:#555;margin-top:3px">Você arrasei nas tarefas de ${mTab}! 💕</div>
+  </div>`:''}`;
+}
+
+// ---- FÉ ----
+function renderFe() {
+  const spTabs=[{id:'leitura',l:'📖 Leitura'},{id:'atividades',l:'✨ Atividades'},{id:'oracoes',l:'🙏 Orações'},{id:'reunioes',l:'📅 Reuniões'},{id:'metas',l:'🌟 Metas'},{id:'notas',l:'📝 Notas'}];
+  const verse=verses[new Date().getDay()];
+  let html=`
+  <div style="display:flex;align-items:center;justify-content:space-between;background:var(--grad);border-radius:18px;padding:14px 18px;margin-bottom:14px;color:#fff">
+    <div><div style="font-size:12px;opacity:.8">🔥 Sequência</div><div style="font-size:24px;font-weight:900">${S.spiritual.streak||0} dias</div></div>
+    <div style="text-align:right;max-width:180px"><div style="font-size:11px;opacity:.8">📅 Foco do dia</div><div style="font-size:12px;font-weight:700">${dayFocus[new Date().getDay()]}</div></div>
+  </div>
+  <div class="tabs">${spTabs.map(t=>`<button class="tab ${spTab===t.id?'on':''}" onclick="spTab='${t.id}';render()">${t.l}</button>`).join('')}</div>`;
+
+  if(spTab==='leitura') {
+    const last=S.spiritual.readings[S.spiritual.readings.length-1];
+    html+=`
+    <div class="card">
+      <div class="card-title">📖 Progresso de Leitura</div>
+      <div class="section-label">Livro da Bíblia</div>
+      <div style="background:var(--pink5);border-radius:12px;padding:12px 14px;display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;cursor:pointer" onclick="openModal('readModal')">
+        <span style="font-size:16px;font-weight:700">${S.spiritual.book}</span>
+        <span style="color:var(--pink)">▾</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">
+        <div><div class="section-label">Capítulo</div><div class="num-box" onclick="openModal('readModal')">${S.spiritual.chapter}</div></div>
+        <div><div class="section-label">Versículo</div><div class="num-box" onclick="openModal('readModal')">${S.spiritual.verse}</div></div>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between">
+        <span style="font-size:13px;color:var(--sub)">📅 Última: ${S.spiritual.readings.length?S.spiritual.readings[S.spiritual.readings.length-1].date:'—'}</span>
+        <button class="btn-p" onclick="openModal('readModal')">Atualizar</button>
+      </div>
+    </div>
+    ${last?`<div class="card">
+      <div class="card-title">📚 Última Leitura</div>
+      <div style="background:var(--pink5);border-radius:12px;padding:12px">
+        <div style="font-weight:800;color:var(--pink)">${last.book} ${last.chapter}:${last.verse}</div>
+        <div style="font-size:12px;color:var(--sub);margin-top:2px">${last.date}</div>
+        ${last.note?`<div style="font-size:13px;margin-top:6px">${last.note}</div>`:''}
+      </div>
+    </div>`:''}
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+        <div class="card-title" style="margin:0">✉️ Cartas</div>
+        <div class="counter-row">
+          <button class="cbtn" onclick="S.spiritual.cartas=Math.max(0,S.spiritual.cartas-1);save();render()">−</button>
+          <span class="cval" style="font-size:22px">${S.spiritual.cartas}</span>
+          <button class="cbtn plus" onclick="S.spiritual.cartas++;save();render()">+</button>
+        </div>
+      </div>
+    </div>
+    <div class="quote-box"><q>${verse.text}</q><cite>— ${verse.ref}</cite></div>`;
+  }
+
+  if(spTab==='atividades') {
+    const pend=S.spiritual.activities.filter(a=>!a.done).length;
+    html+=`
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+      <div style="font-size:17px;font-weight:900">Atividades Espirituais ✨</div>
+      ${pend?`<span class="tag">${pend} pendentes</span>`:'<span class="tag" style="background:#e8f5e9;color:#27ae60">✅ Em dia!</span>'}
+    </div>
+    ${S.spiritual.activities.map(a=>`
+    <div class="act-item">
+      <div class="act-icon" style="--prog:${a.done?100:30}%">
+        <div class="act-inner">${a.emoji}</div>
+      </div>
+      <div class="act-info"><h4>${a.text}</h4><p>${a.sub}</p></div>
+      <button class="act-btn ${a.done?'concl-btn':'done-btn'}" onclick="toggleActivity(${a.id})">${a.done?'Concluído':'Fiz hoje'}</button>
+    </div>`).join('')}
+    <button class="btn-p" style="width:100%;margin-top:8px" onclick="const t=prompt('Nova atividade:');if(t){S.spiritual.activities.push({id:Date.now(),text:t,sub:'',emoji:'✨',done:false});save();render();}">＋ Nova Atividade</button>`;
+  }
+
+  if(spTab==='oracoes') {
+    html+=`<button class="btn-p" style="width:100%;margin-bottom:14px" onclick="openModal('prayerModal')">🙏 Novo pedido de oração</button>
+    ${S.spiritual.prayers.map(p=>`
+    <div class="prayer">
+      <div style="font-size:11px;color:var(--sub);margin-bottom:4px">${p.date}</div>
+      <div style="font-size:14px;font-weight:600">${p.text}</div>
+      ${p.answered?'<div style="color:#27ae60;font-size:12px;font-weight:700;margin-top:6px">✅ Respondida!</div>':''}
+      <div style="display:flex;gap:8px;margin-top:10px">
+        ${!p.answered?`<button class="btn-s" style="font-size:12px;padding:5px 12px" onclick="S.spiritual.prayers.find(x=>x.id===${p.id}).answered=true;S.shine+=5;save();render()">✅ Respondida</button>`:''}
+        <button class="btn-ghost" onclick="S.spiritual.prayers=S.spiritual.prayers.filter(x=>x.id!==${p.id});save();render()">🗑️</button>
+      </div>
+    </div>`).join('')}
+    ${!S.spiritual.prayers.length?'<div class="card" style="text-align:center;color:var(--sub)">Nenhum pedido registrado. 🙏</div>':''}`;
+  }
+
+  if(spTab==='reunioes') {
+    html+=`<button class="btn-p" style="width:100%;margin-bottom:14px" onclick="openModal('meetModal')">📅 Nova reunião</button>
+    ${S.spiritual.meetings.map(m=>`
+    <div class="card">
+      <div style="font-weight:800;font-size:15px;color:var(--pink)">${m.title}</div>
+      ${m.date?`<div style="font-size:13px;color:var(--sub);margin-top:3px">📅 ${m.date}${m.time?' às '+m.time:''}</div>`:''}
+      ${m.prep?`<div style="font-size:13px;margin-top:8px">📝 ${m.prep}</div>`:''}
+      <div style="display:flex;align-items:center;gap:10px;margin-top:10px">
+        <div class="ck-circle ${m.done?'done':''}" onclick="m.done=!m.done;save();render()"></div>
+        <span style="font-size:13px;color:var(--sub)">Preparação concluída</span>
+        <button class="btn-ghost" style="margin-left:auto" onclick="S.spiritual.meetings=S.spiritual.meetings.filter(x=>x.id!==${m.id});save();render()">🗑️</button>
+      </div>
+    </div>`).join('')}
+    ${!S.spiritual.meetings.length?'<div class="card" style="text-align:center;color:var(--sub)">Nenhuma reunião agendada.</div>':''}`;
+  }
+
+  if(spTab==='metas') {
+    html+=`<button class="btn-p" style="width:100%;margin-bottom:14px" onclick="openModal('goalModal')">🌟 Nova meta</button>
+    ${S.spiritual.goals.map(g=>`
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+        <div style="font-weight:800">${g.text}</div>
+        <button class="btn-ghost" onclick="S.spiritual.goals=S.spiritual.goals.filter(x=>x.id!==${g.id});save();render()">🗑️</button>
+      </div>
+      ${pbar(g.current,g.target)}
+      <button class="btn-s" style="margin-top:8px;width:100%" onclick="const go=S.spiritual.goals.find(x=>x.id===${g.id});if(go&&go.current<go.target){go.current++;if(go.current>=go.target){S.shine+=10;}save();render();}">＋ Progresso</button>
+      ${g.current>=g.target?'<div style="color:#27ae60;font-weight:700;text-align:center;margin-top:8px">🎉 Meta alcançada!</div>':''}
+    </div>`).join('')}
+    ${!S.spiritual.goals.length?'<div class="card" style="text-align:center;color:var(--sub)">Nenhuma meta espiritual.</div>':''}`;
+  }
+
+  if(spTab==='notas') {
+    html+=`<div class="card">
+      <div class="card-title">📝 Diário Espiritual</div>
+      <textarea class="inp" id="spNotes" rows="10" placeholder="Suas reflexões, revelações, pensamentos..." style="resize:none;margin-bottom:12px">${S.spiritual.notes||''}</textarea>
+      <button class="btn-p" style="width:100%" onclick="S.spiritual.notes=document.getElementById('spNotes').value;save()">💾 Salvar</button>
+    </div>
+    <div class="card">
+      <div class="card-title">🔔 Lembretes de Oração</div>
+      ${[{k:'morning',l:'🌅 Oração da manhã'},{k:'meal',l:'🍽️ Oração das refeições'},{k:'night',l:'🌙 Oração antes de dormir'}].map(r=>`
+      <div class="ck-row" onclick="S.spiritual.prayerRem.${r.k}=!S.spiritual.prayerRem.${r.k};save();render()">
+        <div class="ck-circle ${S.spiritual.prayerRem[r.k]?'done':''}"></div>
+        <span class="ck-label">${r.l}</span>
+      </div>`).join('')}
+    </div>`;
+  }
+  return html;
+}
+
+// ---- CASA ----
+function renderCasa() {
+  const casaTabs=[
+    {id:'diaria',l:'☀️ Diária'},
+    {id:'lavanderia',l:'👗 Roupa'},
+    {id:'pesada',l:'🪣 Semanal'},
+    {id:'zonas',l:'🗺️ Zonas'},
+    {id:'closet',l:'👗 Closet'},
+  ];
+
+  // helper para render de lista com botão de adicionar
+  const listaCheck = (arr, key, label, addPrompt) => {
+    const done = arr.filter(t=>t.d).length;
+    return `<div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+        <div style="font-size:15px;font-weight:900">${label}</div>
+        <span style="font-size:12px;color:var(--sub)">${done}/${arr.length}</span>
+      </div>
+      <div class="pbar-wrap" style="margin-bottom:12px"><div class="pbar-fill" style="width:${arr.length?Math.round(done/arr.length*100):0}%"></div></div>
+      ${arr.map((t,i)=>`
+      <div class="ck-row" onclick="S.casa.${key}[${i}].d=!S.casa.${key}[${i}].d;save();render()">
+        <div class="ck-circle ${t.d?'done':''}"></div>
+        <span class="ck-label ${t.d?'done':''}">${t.t}</span>
+        ${t.gold?'<span class="badge-gold">HÁBITO DE OURO</span>':''}
+        <button class="btn-ghost" style="font-size:14px;margin-left:4px" onclick="event.stopPropagation();S.casa.${key}.splice(${i},1);save();render()">🗑️</button>
+      </div>`).join('')}
+      <button class="btn-s" style="width:100%;margin-top:10px" onclick="const t=prompt('${addPrompt}');if(t){S.casa.${key}.push({t,d:false});save();render();}">＋ Adicionar</button>
+    </div>`;
+  };
+
+  let html=`
+  <div style="font-size:11px;font-weight:800;color:var(--pink);text-transform:uppercase;letter-spacing:.8px;text-align:center;margin-bottom:2px">O PLANO DE HOJE</div>
+  <div style="font-size:20px;font-weight:900;text-align:center;margin-bottom:14px">ROTINA DA CASA 🏡</div>
+  <div class="tabs">${casaTabs.map(t=>`<button class="tab ${casaTab===t.id?'on':''}" onclick="casaTab='${t.id}';render()">${t.l}</button>`).join('')}</div>`;
+
+  if(casaTab==='diaria') {
+    // Sub-abas manhã/tarde/noite/geral
+    const sub = cleanTab==='manha'?'manha':cleanTab==='tarde'?'tarde':cleanTab==='noite'?'noite':'geral';
+    html+=`<div class="tabs" style="margin-bottom:14px">
+      <button class="tab ${sub==='geral'?'on':''}" onclick="cleanTab='geral';render()">📋 Geral</button>
+      <button class="tab ${sub==='manha'?'on':''}" onclick="cleanTab='manha';render()">🌅 Manhã</button>
+      <button class="tab ${sub==='tarde'?'on':''}" onclick="cleanTab='tarde';render()">☀️ Tarde</button>
+      <button class="tab ${sub==='noite'?'on':''}" onclick="cleanTab='noite';render()">🌙 Noite</button>
+    </div>`;
+
+    if(sub==='geral') html += listaCheck(S.casa.limpDiaria,'limpDiaria','✦ Limpeza Diária Geral','Nova tarefa de limpeza:');
+    if(sub==='manha') html += listaCheck(S.casa.limpManha||[],'limpManha','🌅 Limpeza da Manhã','Nova tarefa da manhã:');
+    if(sub==='tarde') html += listaCheck(S.casa.limpTarde||[],'limpTarde','☀️ Limpeza da Tarde','Nova tarefa da tarde:');
+    if(sub==='noite') html += listaCheck(S.casa.limpNoite||[],'limpNoite','🌙 Limpeza da Noite','Nova tarefa da noite:');
+  }
+
+  if(casaTab==='lavanderia') {
+    html+=`<div class="lbox">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px"><span style="font-size:22px">👗</span><span style="font-size:17px;font-weight:900">Lavanderia — Os 5 Os</span></div>
+      ${S.casa.lavanderia.map((t,i)=>`
+      <div class="ck-row" onclick="S.casa.lavanderia[${i}].d=!S.casa.lavanderia[${i}].d;save();render()">
+        <div class="ck-circle ${t.d?'done':''}"></div>
+        <span class="ck-label ${t.d?'done':''}">${t.t}</span>
+        <button class="btn-ghost" style="font-size:14px" onclick="event.stopPropagation();S.casa.lavanderia.splice(${i},1);save();render()">🗑️</button>
+      </div>`).join('')}
+      <button class="btn-s" style="margin-top:10px;width:100%" onclick="const t=prompt('Nova etapa da lavanderia:');if(t){S.casa.lavanderia.push({t,d:false});save();render();}">＋ Adicionar etapa</button>
+    </div>`;
+  }
+
+  if(casaTab==='pesada') {
+    html += listaCheck(S.casa.limpPesada,'limpPesada','🪣 Limpeza Pesada Semanal','Nova tarefa pesada:');
+  }
+
+  if(casaTab==='zonas') {
+    html+=`<div class="tabs" style="margin-bottom:14px">
+      <button class="tab ${cleanTab==='semanal'||cleanTab==='manha'||cleanTab==='tarde'||cleanTab==='noite'||cleanTab==='geral'?'':'on'} ${cleanTab==='semanal'?'on':''}" onclick="cleanTab='semanal';render()">📋 Semanal</button>
+      <button class="tab ${cleanTab==='mensal'?'on':''}" onclick="cleanTab='mensal';render()">📆 Mensal</button>
+    </div>`;
+    const zonaKey = (cleanTab==='mensal')?'mensal':'semanal';
+    S.casa.zonas[zonaKey].forEach((zone,zi)=>{
+      const dn=zone.tasks.filter(t=>t.d).length;
+      html+=`<div style="background:var(--grad);border-radius:18px;padding:16px;margin-bottom:12px;color:#fff">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+          <span style="font-weight:900;font-size:15px">${zone.name}</span>
+          <span style="font-size:12px;opacity:.85">${dn}/${zone.tasks.length} ${dn===zone.tasks.length?'✅':''}</span>
+        </div>
+        ${zone.tasks.map((task,ti)=>`
+        <div style="display:flex;align-items:center;gap:10px;padding:7px 0;cursor:pointer" onclick="S.casa.zonas['${zonaKey}'][${zi}].tasks[${ti}].d=!S.casa.zonas['${zonaKey}'][${zi}].tasks[${ti}].d;save();render()">
+          <div style="width:20px;height:20px;border-radius:50%;border:2px solid rgba(255,255,255,.6);background:${task.d?'#fff':'transparent'};display:flex;align-items:center;justify-content:center;flex-shrink:0">
+            ${task.d?`<span style="color:var(--pink);font-size:10px;font-weight:900">✓</span>`:''}
+          </div>
+          <span style="font-size:13px;flex:1;text-decoration:${task.d?'line-through':'none'};opacity:${task.d?.65:1}">${task.t}</span>
+          <button onclick="event.stopPropagation();S.casa.zonas['${zonaKey}'][${zi}].tasks.splice(${ti},1);save();render()" style="background:rgba(255,255,255,.2);border:none;border-radius:50%;width:22px;height:22px;cursor:pointer;font-size:11px;color:#fff;display:flex;align-items:center;justify-content:center">✕</button>
+        </div>`).join('')}
+        <button onclick="const t=prompt('Nova tarefa para ${zone.name}:');if(t){S.casa.zonas['${zonaKey}'][${zi}].tasks.push({t,d:false});save();render();}" style="background:rgba(255,255,255,.25);border:none;border-radius:20px;padding:6px 14px;color:#fff;font-size:12px;font-weight:700;cursor:pointer;margin-top:8px;font-family:'Nunito',sans-serif">＋ Adicionar tarefa</button>
+      </div>`;
+    });
+    html+=`<button class="btn-s" style="width:100%;margin-top:4px" onclick="const n=prompt('Nome da nova zona (ex: 🏠 Varanda):');if(n){S.casa.zonas['${zonaKey}'].push({id:Date.now(),name:n,tasks:[]});save();render();}">＋ Nova Zona</button>`;
+  }
+
+  if(casaTab==='closet') {
+    html+=`
+    <div class="card">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px"><span style="font-size:20px">👗</span><span style="font-size:17px;font-weight:900">Closet da Su</span></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">
+        <div style="border:2px dashed var(--pink3);border-radius:16px;padding:16px;text-align:center">
+          <div style="font-size:13px;font-weight:700;color:var(--sub)">Uma seção por dia</div>
+          <div style="font-size:28px;margin-top:8px">📅</div>
+        </div>
+        <div style="background:var(--pink);border-radius:16px;padding:16px;text-align:center;color:#fff">
+          <div style="font-size:13px;font-weight:800">Regra: Entrou uma,</div>
+          <div style="font-size:13px;font-weight:800">Saiu outra</div>
+          <div style="font-size:24px;margin-top:6px">↔️</div>
+        </div>
+      </div>
+      <button class="btn-p" style="width:100%;margin-bottom:8px" onclick="const t=prompt('Item para doação:');if(t){S.casa.doacoes=(S.casa.doacoes?S.casa.doacoes+'\n':'')+t;save();render();}">🗑️ Adicionar à Lista de Doações</button>
+      ${S.casa.doacoes?`<div style="background:var(--pink5);border-radius:12px;padding:12px;font-size:13px;white-space:pre-line;margin-top:4px">${S.casa.doacoes}</div>`:''}
+    </div>
+    <div class="quote-box"><q>Uma casa organizada traz paz ao coração.</q></div>`;
+  }
+
+  return html;
+}
+
+// ---- COZINHA ----
+function renderCozinha() {
+  return `
+  <div class="quote-box" style="text-align:left;padding:14px 18px">
+    <q style="font-size:14px">"Cozinhar é um ato de amor que alimenta a alma. Vamos lá! ❤️"</q>
+  </div>
+
+  <!-- Produção Semanal -->
+  <div class="card">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+      <div class="card-title" style="margin:0">Produção Semanal 📅</div>
+      <span class="tag">${new Date().toLocaleDateString('pt-BR',{weekday:'long'})}</span>
+    </div>
+    <div style="background:linear-gradient(135deg,#8B4513,#6B3A1F);border-radius:12px;height:90px;margin-bottom:14px;display:flex;align-items:center;justify-content:center;overflow:hidden">
+      <div style="font-size:40px">🪵🔥</div>
+    </div>
+    ${S.cozinha.producao.map((t,i)=>`
+    <div class="ck-row" onclick="S.cozinha.producao[${i}].d=!S.cozinha.producao[${i}].d;save();render()">
+      <div class="ck-circle ${t.d?'done':''}"></div>
+      <span class="ck-label ${t.d?'done':''}">${t.t}</span>
+    </div>`).join('')}
+    <button class="btn-s" style="margin-top:10px;width:100%" onclick="const t=prompt('Nova tarefa de produção:');if(t){S.cozinha.producao.push({t,d:false});save();render();}">＋ Adicionar tarefa</button>
+  </div>
+
+  <!-- Estoque de Congelados -->
+  <div class="card">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+      <div class="card-title" style="margin:0">Estoque de Congelados 🧊</div>
+      <button class="btn-p" style="padding:7px 14px;font-size:12px" onclick="openModal('frozenModal')">＋</button>
+    </div>
+    <div class="card-sub">Toque em − ou + para atualizar o estoque</div>
+    ${S.cozinha.congelados.map(item=>`
+    <div class="frozen-item">
+      <div class="fi-emoji">${item.emoji}</div>
+      <div class="fi-info"><h4>${item.name}</h4><p>${item.sub||''}</p></div>
+      <div class="counter-row">
+        <button class="cbtn" onclick="adjFrozen(${item.id},-1)">−</button>
+        <span class="cval">${item.qty}</span>
+        <button class="cbtn plus" onclick="adjFrozen(${item.id},1)">+</button>
+      </div>
+      <button class="btn-ghost" onclick="S.cozinha.congelados=S.cozinha.congelados.filter(x=>x.id!==${item.id});save();render()" style="margin-left:4px">🗑️</button>
+    </div>`).join('')}
+    ${!S.cozinha.congelados.length?'<div style="text-align:center;color:var(--sub);padding:16px">Nenhuma porção. Toque em + para adicionar!</div>':''}
+  </div>
+
+  <!-- Fogão a Lenha -->
+  <div style="border:2px dashed var(--pink3);border-radius:18px;padding:16px;margin-bottom:14px">
+    <div class="card-title" style="margin-bottom:12px">Rotina do Fogão a Lenha 🪵✨</div>
+    ${S.cozinha.fogao.map((t,i)=>`
+    <div class="ck-row" onclick="S.cozinha.fogao[${i}].d=!S.cozinha.fogao[${i}].d;if(S.cozinha.fogao[${i}].d)S.shine++;save();render()">
+      <div class="ck-circle ${t.d?'done':''}"></div>
+      <span class="ck-label ${t.d?'done':''}">${t.t}</span>
+    </div>`).join('')}
+  </div>
+
+  <!-- Receitas & Notas -->
+  <div class="card">
+    <div class="card-title">Receitas & Notas da Su 📝</div>
+    <textarea class="inp" id="cozNotes" rows="5" placeholder="Anote aqui seus temperos secretos ou combinações..." style="resize:none;margin-bottom:12px">${S.cozinha.notas||''}</textarea>
+    <button class="btn-p" style="width:100%" onclick="S.cozinha.notas=document.getElementById('cozNotes').value;save()">💾 Salvar Notas</button>
+  </div>`;
+}
+
+// ---- SÍTIO ----
+function renderSitio() {
+  const frase=sitioFrases[S.sitio.frase%sitioFrases.length];
+  const pend=S.sitio.cuidados.filter(c=>!c.done).length;
+  return `
+  <div class="hero-card">
+    <div style="font-size:11px;opacity:.8;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Frase do Dia</div>
+    <h2>${frase}</h2>
+  </div>
+
+  <!-- Desafio -->
+  <div class="card">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+      <span style="font-size:20px">✦</span>
+      <span style="font-size:16px;font-weight:900">Desafio de Hoje ✨</span>
+    </div>
+    <div style="color:var(--pink);font-weight:800;margin-bottom:4px">Hoje cuide das flores com carinho!</div>
+    <div style="font-size:13px;color:var(--sub);margin-bottom:14px">Uma tarefa especial para florescer seu dia e seu jardim.</div>
+    <button class="btn-p" style="width:100%" onclick="S.sitio.dailyChallengeDone=!S.sitio.dailyChallengeDone;if(S.sitio.dailyChallengeDone)S.shine+=5;save();render()">
+      ${S.sitio.dailyChallengeDone?'🎉 Desafio Concluído!':'✅ Concluir Desafio'}
+    </button>
+  </div>
+
+  <!-- Cuidados Diários -->
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+    <div style="font-size:17px;font-weight:900">Cuidados Diários 📋</div>
+    <span class="tag">${pend} TAREFAS</span>
+  </div>
+  ${S.sitio.cuidados.map((c,i)=>`
+  <div class="act-item" onclick="S.sitio.cuidados[${i}].done=!S.sitio.cuidados[${i}].done;if(S.sitio.cuidados[${i}].done)S.shine+=2;save();render()" style="cursor:pointer">
+    <div class="ck-emoji">${c.emoji}</div>
+    <div class="act-info"><h4>${c.text}</h4></div>
+    <div class="ck-circle ${c.done?'done':''}" style="flex-shrink:0"></div>
+  </div>`).join('')}
+  <button class="btn-s" style="width:100%;margin-bottom:14px" onclick="const t=prompt('Nova tarefa da horta:');if(t){S.sitio.cuidados.push({id:Date.now(),text:t,emoji:'🌱',done:false});save();render();}">＋ Adicionar tarefa</button>
+
+  <!-- Cuidados Especiais -->
+  <div style="font-size:17px;font-weight:900;margin-bottom:12px">Cuidados Especiais ✨</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+    ${S.sitio.especiais.map((e,i)=>`
+    <div style="background:${e.done?'var(--pink5)':'#fff'};border-radius:16px;padding:16px;text-align:center;box-shadow:0 2px 10px rgba(247,37,133,.07);cursor:pointer" onclick="S.sitio.especiais[${i}].done=!S.sitio.especiais[${i}].done;if(S.sitio.especiais[${i}].done)S.shine+=3;save();render()">
+      <div style="width:50px;height:50px;border-radius:50%;background:${i===0?'#e0f0ff':'var(--pink5)'};margin:0 auto 10px;display:flex;align-items:center;justify-content:center;font-size:22px">${i===0?'🌊':'🌸'}</div>
+      <div style="font-weight:800;font-size:13px;color:${i===0?'#4a90d9':'var(--pink)'}">${e.text}</div>
+      <div style="font-size:11px;color:var(--sub);margin-top:3px">${e.sub}</div>
+      ${e.done?'<div style="font-size:11px;color:#27ae60;font-weight:700;margin-top:6px">✅ Feito!</div>':''}
+    </div>`).join('')}
+  </div>`;
+}
+
+// ---- BELEZA ----
+function renderBeleza() {
+  return `
+  <div style="background:linear-gradient(135deg,#fff0f5,#f0e8ff);border-radius:18px;padding:16px;margin-bottom:14px;display:flex;align-items:center;gap:10px">
+    <span style="font-size:22px">✦</span>
+    <div><div style="font-weight:900;color:var(--pink)">Você é linda!</div><div style="font-size:13px;color:var(--sub)">Seu momento de brilhar hoje.</div></div>
+  </div>
+
+  <!-- Henê -->
+  <div class="card">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+      <div style="display:flex;align-items:center;gap:8px"><span style="font-size:20px">✂️</span><span style="font-size:16px;font-weight:900">Henê: Cronograma</span></div>
+      <span style="background:var(--pink5);color:var(--pink);font-size:11px;font-weight:800;padding:3px 10px;border-radius:20px">ATIVO</span>
+    </div>
+    ${S.brilhar.henneDate?`<div style="font-size:13px;color:var(--sub);margin-bottom:10px">Última aplicação: ${S.brilhar.henneDate}</div>`:'<div style="font-size:13px;color:var(--sub);margin-bottom:10px">Nenhuma aplicação registrada ainda</div>'}
+    <div class="section-label">Observações</div>
+    <textarea class="inp" id="henneNotes" rows="3" placeholder="Ex: Deixei 2h, ficou bem escuro..." style="resize:none;margin-bottom:12px">${S.brilhar.henneNotes||''}</textarea>
+    <div style="display:flex;align-items:center;justify-content:space-between">
+      ${S.brilhar.henneDate?`<span style="font-size:13px;background:var(--pink5);color:var(--pink);padding:5px 12px;border-radius:20px;font-weight:700">Próxima: 30 dias</span>`:'<span></span>'}
+      <button class="btn-p" onclick="S.brilhar.henneDate=new Date().toLocaleDateString('pt-BR');S.brilhar.henneNotes=document.getElementById('henneNotes').value;S.shine+=3;save();render()">Fiz hoje</button>
+    </div>
+  </div>
+
+  <!-- Cronograma Capilar -->
+  <div class="card">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px"><span style="font-size:20px">🌿</span><span style="font-size:16px;font-weight:900">Cronograma Capilar</span></div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px">
+      ${S.brilhar.cronograma.map((c,i)=>`
+      <div style="text-align:center;padding:14px;border-radius:14px;background:${i===0?'#e8f4ff':i===1?'#ffe8f0':'#f0e8ff'}">
+        <div style="font-size:22px">${i===0?'💧':i===1?'🧴':'✦'}</div>
+        <div style="font-size:12px;font-weight:800;color:${i===0?'#4a90d9':i===1?'var(--pink)':'#9b59b6'};margin:5px 0">${c.l}</div>
+        <div style="font-size:11px;background:${c.s==='Concluído'?'var(--pink)':c.s==='Pendente'?'#e8f4ff':'#f0e8ff'};color:${c.s==='Concluído'?'#fff':c.s==='Pendente'?'#4a90d9':'#9b59b6'};border-radius:20px;padding:2px 8px;font-weight:700">${c.s}</div>
+      </div>`).join('')}
+    </div>
+    <button class="btn-p" style="width:100%" onclick="S.brilhar.cronograma.forEach(c=>{if(c.s==='Pendente')c.s='Concluído';});S.shine+=2;save();render()">✅ Fiz hoje</button>
+  </div>
+
+  <!-- Outros Cuidados -->
+  <div style="font-size:17px;font-weight:900;margin-bottom:12px">Outros Cuidados</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">
+    <div class="card" style="padding:14px">
+      <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px"><span style="font-size:18px">✂️</span><span style="font-weight:800">Depilação</span></div>
+      <div style="font-size:12px;color:var(--sub)">Área: ${S.brilhar.depi.area||'—'}</div>
+      <div style="font-size:12px;color:var(--sub)">Última: ${S.brilhar.depi.ultima||'—'}</div>
+      ${S.brilhar.depi.proxima?`<div style="font-size:12px;color:var(--pink);font-weight:700">Next: ${S.brilhar.depi.proxima}</div>`:''}
+      <button class="btn-s" style="margin-top:8px;font-size:11px;padding:5px 10px" onclick="const d=new Date().toLocaleDateString('pt-BR');S.brilhar.depi.ultima=d;save();render()">Fiz hoje</button>
+    </div>
+    <div class="card" style="padding:14px">
+      <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px"><span style="font-size:18px">💅</span><span style="font-weight:800">Unhas</span></div>
+      <div style="font-size:12px;color:var(--sub)">Cor: ${S.brilhar.unhas.cor||'—'}</div>
+      <div style="font-size:12px;color:var(--sub)">Última: ${S.brilhar.unhas.ultima||'—'}</div>
+      ${S.brilhar.unhas.proxima?`<div style="font-size:12px;color:var(--pink);font-weight:700">Next: ${S.brilhar.unhas.proxima}</div>`:''}
+      <button class="btn-s" style="margin-top:8px;font-size:11px;padding:5px 10px" onclick="const d=new Date().toLocaleDateString('pt-BR');S.brilhar.unhas.ultima=d;const c=prompt('Cor das unhas:');if(c)S.brilhar.unhas.cor=c;save();render()">Fiz hoje</button>
+    </div>
+  </div>
+
+  <!-- Hidratação corporal -->
+  <div class="card">
+    <div style="display:flex;align-items:center;gap:12px">
+      <div style="width:44px;height:44px;border-radius:50%;background:var(--pink5);display:flex;align-items:center;justify-content:center;font-size:22px">🫧</div>
+      <div style="flex:1"><div style="font-weight:800">Hidratação Corporal</div><div style="font-size:12px;color:var(--sub)">Pele macia e cheirosa</div></div>
+      <button class="btn-p" style="font-size:12px;padding:8px 14px" onclick="S.brilhar.oleo=!S.brilhar.oleo;if(S.brilhar.oleo)S.shine++;save();render()">${S.brilhar.oleo?'✅ Feito!':'Passei óleo hoje'}</button>
+    </div>
+  </div>
+
+  <!-- Custom items -->
+  ${S.brilhar.custom.map((item,i)=>`
+  <div class="card">
+    <div style="display:flex;align-items:center;gap:10px">
+      <div class="ck-circle ${item.done?'done':''}" onclick="S.brilhar.custom[${i}].done=!S.brilhar.custom[${i}].done;if(S.brilhar.custom[${i}].done)S.shine++;save();render()"></div>
+      <span style="flex:1;font-weight:600">${item.text}</span>
+      <button class="btn-ghost" onclick="S.brilhar.custom.splice(${i},1);save();render()">🗑️</button>
+    </div>
+  </div>`).join('')}
+  <button class="btn-s" style="width:100%" onclick="const t=prompt('Novo cuidado:');if(t){S.brilhar.custom.push({text:t,done:false});save();render();}">＋ Adicionar cuidado</button>`;
+}
+
+// ---- TIMERS ----
+function renderTimers() {
+  let html=`
+  <div class="card">
+    <div class="card-title">⚡ Atalhos Rápidos</div>
+    <div style="display:flex;flex-wrap:wrap;gap:8px">
+      ${presets.map(p=>`<button class="btn-s" onclick="startPreset(${p.s})">${p.l}</button>`).join('')}
+    </div>
+  </div>`;
+
+  S.timers.forEach((t,i)=>{
+    const active=timerIdx===i&&t.running;
+    html+=`<div style="background:${active?'var(--grad)':'var(--card)'};border-radius:${active?22:18}px;padding:20px;margin-bottom:12px;box-shadow:0 3px 14px rgba(247,37,133,${active?.35:.07})">
+      <div style="font-weight:800;font-size:14px;color:${active?'rgba(255,255,255,.85)':'var(--sub)'};margin-bottom:6px">${t.name}</div>
+      <div id="td_${i}" style="font-size:52px;font-weight:900;color:${active?'#fff':'var(--pink)'};text-align:center;letter-spacing:2px;margin:8px 0">${fmt(active?timerLeft:t.left)}</div>
+      ${t.done?`<div style="text-align:center;font-weight:800;color:${active?'#fff':'#27ae60'};margin-bottom:8px">🎉 Tempo esgotado!</div>`:''}
+      <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
+        ${!t.running?`<button class="btn-p" style="${active?'background:#fff;color:var(--pink)':''}" onclick="startTimer(${i});render()">▶ Iniciar</button>`:`<button class="btn-s" onclick="stopTimer(${i})">⏸ Pausar</button>`}
+        <button class="btn-s" onclick="resetTimer(${i})">↺ Resetar</button>
+        <button class="btn-ghost" onclick="delTimer(${i})" style="margin-left:8px">🗑️</button>
+      </div>
+    </div>`;
+  });
+
+  if(!S.timers.length) html+='<div class="card" style="text-align:center;color:var(--sub)">Nenhum cronômetro. Use os atalhos ou toque em + ⏱️</div>';
+  return html;
+}
+
+// ---- TROFÉUS ----
+const medals=[
+  {n:'Primeiros Passos',i:'🌸',d:'Complete 5 missões',fn:()=>doneMissions()>=5},
+  {n:'Regada',i:'💧',d:'8 copos de água',fn:()=>S.water>=8},
+  {n:'Fiel',i:'🙏',d:'7 dias de leitura',fn:()=>(S.spiritual.streak||0)>=7},
+  {n:'Rainha do Sítio',i:'🌿',d:'Conclua 5 tarefas do sítio',fn:()=>S.sitio.cuidados.filter(c=>c.done).length>=5},
+  {n:'Hidratação Top',i:'✂️',d:'Aplique henê',fn:()=>!!S.brilhar.henneDate},
+  {n:'Radiante',i:'✨',d:'50 pontos de brilho',fn:()=>S.shine>=50},
+  {n:'Guerreira',i:'👑',d:'100 pontos de brilho',fn:()=>S.shine>=100},
+  {n:'Meta Batida',i:'🏆',d:'Alcance uma meta espiritual',fn:()=>S.spiritual.goals.some(g=>g.current>=g.target)},
+];
+
+function renderTrofeus() {
+  const earned=medals.filter(m=>m.fn()).length;
+  return `
+  <div style="background:var(--grad);border-radius:22px;padding:22px;text-align:center;margin-bottom:18px;box-shadow:0 6px 22px rgba(247,37,133,.4)">
+    <div style="color:rgba(255,255,255,.8);font-size:13px">✨ Brilho Acumulado</div>
+    <div style="color:#fff;font-size:54px;font-weight:900;line-height:1">${S.shine}</div>
+    <div style="color:rgba(255,255,255,.8);font-size:13px;margin-top:4px">${earned}/${medals.length} medalhas conquistadas</div>
+  </div>
+
+  <div style="font-size:16px;font-weight:900;margin-bottom:12px">Conquistas & Medalhas</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+    ${medals.map(m=>{
+      const won=m.fn();
+      return `<div class="medal ${won?'won':''}">
+        <div style="width:58px;height:58px;border-radius:50%;background:${won?'var(--grad)':'#eee'};margin:0 auto 10px;display:flex;align-items:center;justify-content:center;font-size:26px;${won?'box-shadow:0 3px 12px rgba(247,37,133,.4)':''}">${m.i}</div>
+        <div style="font-weight:800;font-size:13px;color:${won?'var(--pink)':'#aaa'}">${m.n}</div>
+        <div style="font-size:11px;color:#bbb;margin-top:3px">${m.d}</div>
+        ${won?'<div style="color:var(--pink);font-size:11px;font-weight:800;margin-top:5px">✓ Conquistada!</div>':''}
+      </div>`;
+    }).join('')}
+  </div>
+
+  <!-- Mural de inspirações -->
+  <div style="font-size:16px;font-weight:900;margin:18px 0 12px">🎀 Mural de Inspirações</div>
+  <button class="btn-p" style="width:100%;margin-bottom:12px" onclick="openModal('muralModal')">＋ Adicionar inspiração</button>
+  ${S.mural.map(m=>`
+  <div style="background:var(--pink5);border-radius:14px;padding:14px;margin-bottom:9px;border-left:4px solid var(--pink)">
+    <div style="display:flex;justify-content:space-between;margin-bottom:6px">
+      <span>${m.emoji} <span style="font-size:12px;color:var(--sub)">${m.date}</span></span>
+      <button class="btn-ghost" onclick="S.mural=S.mural.filter(x=>x.id!==${m.id});save();render()">🗑️</button>
+    </div>
+    <div style="font-size:14px;white-space:pre-wrap">${m.text}</div>
+  </div>`).join('')}
+  ${!S.mural.length?'<div class="card" style="text-align:center;color:var(--sub)">Seu mural está vazio. ✨</div>':''}
+
+  <!-- Lista de compras -->
+  <div style="font-size:16px;font-weight:900;margin:18px 0 12px">🛒 Lista de Compras</div>
+  <div style="display:flex;gap:7px;margin-bottom:14px;flex-wrap:wrap">
+    ${['mercado','farmacia','limpeza','outros'].map(c=>`<button class="tab ${shopTab===c?'on':''}" onclick="shopTab='${c}';render()">${c==='mercado'?'🛒 Mercado':c==='farmacia'?'💊 Farmácia':c==='limpeza'?'🧹 Limpeza':'📦 Outros'}</button>`).join('')}
+  </div>
+  ${(()=>{
+    const list = S.shopping[shopTab]||[];
+    const comprar = list.filter(x=>x.type!=='tenho');
+    const tenho = list.filter(x=>x.type==='tenho');
+    let h='';
+    if(comprar.length){
+      h+=`<div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+        <div style="background:var(--pink);color:#fff;border-radius:20px;padding:3px 12px;font-size:12px;font-weight:800">🛒 Vou Comprar</div>
+        <span style="font-size:12px;color:var(--sub)">${comprar.filter(x=>x.done).length}/${comprar.length} marcados</span>
+      </div>`;
+      comprar.forEach(item=>{
+        h+=`<div style="background:${item.done?'#f9f9f9':'#fff'};border-radius:14px;padding:12px 14px;margin-bottom:8px;display:flex;align-items:center;gap:10px;box-shadow:0 1px 8px rgba(247,37,133,.07);cursor:pointer;border-left:3px solid ${item.done?'#ddd':'var(--pink)'}" onclick="(function(){const x=S.shopping['${shopTab}'].find(x=>x.id===${item.id});if(x){x.done=!x.done;save();render();}})()">
+          <div class="ck-circle ${item.done?'done':''}" style="flex-shrink:0"></div>
+          <div style="flex:1">
+            <div style="font-size:14px;font-weight:700;${item.done?'text-decoration:line-through;color:#bbb':'color:var(--text)'}">${item.text}</div>
+            <div style="font-size:12px;color:var(--pink);font-weight:700;margin-top:2px">📦 ${item.qty||'1 unid'}</div>
+          </div>
+          <button class="btn-ghost" onclick="event.stopPropagation();S.shopping['${shopTab}']=S.shopping['${shopTab}'].filter(x=>x.id!==${item.id});save();render()">🗑️</button>
+        </div>`;
+      });
+    }
+    if(tenho.length){
+      h+=`<div style="display:flex;align-items:center;gap:8px;margin:14px 0 10px">
+        <div style="background:#e8f5e9;color:#27ae60;border-radius:20px;padding:3px 12px;font-size:12px;font-weight:800">🏠 Já Tenho em Casa</div>
+        <span style="font-size:12px;color:var(--sub)">${tenho.length} itens</span>
+      </div>`;
+      tenho.forEach(item=>{
+        h+=`<div style="background:#f8fff9;border-radius:14px;padding:12px 14px;margin-bottom:8px;display:flex;align-items:center;gap:10px;border-left:3px solid #27ae60">
+          <div style="font-size:18px">✅</div>
+          <div style="flex:1">
+            <div style="font-size:14px;font-weight:700;color:var(--text)">${item.text}</div>
+            <div style="font-size:12px;color:#27ae60;font-weight:700;margin-top:2px">📦 ${item.qty||'1 unid'}</div>
+          </div>
+          <button class="btn-ghost" onclick="S.shopping['${shopTab}']=S.shopping['${shopTab}'].filter(x=>x.id!==${item.id});save();render()">🗑️</button>
+        </div>`;
+      });
+    }
+    if(!list.length) h='<div class="card" style="text-align:center;color:var(--sub)">Lista vazia. Toque em + para adicionar! 🛒</div>';
+    return h;
+  })()}
+  <div style="display:flex;gap:8px;margin-top:10px">
+    <button class="btn-p" style="flex:1" onclick="shType='comprar';openModal('shopModal')">＋ Vou Comprar</button>
+    <button class="btn-s" style="flex:1" onclick="shType='tenho';openModal('shopModal')">＋ Já Tenho</button>
+  </div>`;
+}
+
+// ============================================================
+// MAIN RENDER
+// ============================================================
+function render() {
+  const renders=[renderHome,renderMissoes,renderFe,renderCasa,renderCozinha,renderSitio,renderBeleza,renderTrofeus];
+  const c=document.getElementById('content');
+  c.innerHTML=`<div class="fu">${renders[tab]()}</div>`;
+}
+
+function setWater(n){S.water=Math.max(0,Math.min(8,n));save();render();}
+
+// ============================================================
+// INIT
+// ============================================================
+function init() {
+  // Apply saved theme
+  if(S.theme&&S.theme!=='pink'){const p=palettes.find(x=>x.cls===S.theme);if(p)setPal(p.cls,p.c1,p.c2);}
+  if(S.dark) toggleDark();
+  const fsm={small:'13px',normal:'15px',large:'17px'};
+  if(S.fs) document.documentElement.style.setProperty('--fs',fsm[S.fs]||'15px');
+
+  // Populate Bible select on load
+  setTimeout(()=>{
+    const s=document.getElementById('rBook');
+    if(s&&!s.children.length) booksOfBible.forEach(b=>{const o=document.createElement('option');o.textContent=b;s.appendChild(o);});
+  },100);
+
+  window.addEventListener('online',()=>document.getElementById('offlineBar').classList.remove('show'));
+  window.addEventListener('offline',()=>document.getElementById('offlineBar').classList.add('show'));
+  if(!navigator.onLine) document.getElementById('offlineBar').classList.add('show');
+
+  renderNav();
+  render();
+}
+
+init();
+
+// Register Service Worker for offline + PWA
+if('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js').catch(()=>{});
+  });
+}
+</script>
+</body>
+</html>
